@@ -1,7 +1,6 @@
 export const environment = {
-  ACCOUNT_ID: '05c4ee1bc8404d26faa4ef1d95498abf',
-  ACCESS_KEY_ID: 'ebac8594c9bf9fe64a4b95a018a055c0',
-  SECRET_ACCESS_KEY:
-    '5866d166675b187631486e4a586d828ff60705c804d27718c7d7575954eb0d0b',
+  ACCOUNT_ID: '',
+  ACCESS_KEY_ID: '',
+  SECRET_ACCESS_KEY: '',
   DB: 'http://localhost:3000/graphql',
 };
