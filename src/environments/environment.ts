@@ -3,4 +3,5 @@ export const environment = {
   ACCESS_KEY_ID: 'ebac8594c9bf9fe64a4b95a018a055c0',
   SECRET_ACCESS_KEY:
     '5866d166675b187631486e4a586d828ff60705c804d27718c7d7575954eb0d0b',
+  DB: 'https://jobian-back-f2b6e0b37649.herokuapp.com/graphql',
 };

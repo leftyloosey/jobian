@@ -12,6 +12,7 @@ import { InMemoryCache } from '@apollo/client';
 import { provideQuillConfig } from 'ngx-quill/config';
 import ImageResize from '@mgreminger/quill-image-resize-module';
 import Quill, { Delta } from 'quill';
+import { environment } from '../environments/environment';
 Quill.register('modules/imageResize', ImageResize);
 // console.log(Quill.imports);
 
@@ -26,7 +27,8 @@ export const appConfig: ApplicationConfig = {
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       return {
-        link: httpLink.create({ uri: 'http://localhost:3000/graphql' }),
+        link: httpLink.create({ uri: environment.DB }),
+        // link: httpLink.create({ uri: 'http://localhost:3000/graphql' }),
         cache: new InMemoryCache(),
         // other options...
       };

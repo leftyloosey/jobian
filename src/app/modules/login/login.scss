@@ -1,0 +1,19 @@
+.form-container {
+  display: flex;
+  justify-content: center;
+  transform: translateY(2rem);
+
+  &__login-fields {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+  }
+  &__button-row {
+    display: flex;
+    justify-content: center;
+    &--create-button {
+      color: greenyellow;
+      opacity: 0.85;
+    }
+  }
+}
