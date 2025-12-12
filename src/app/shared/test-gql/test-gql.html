@@ -1,0 +1,8 @@
+@if (loading) {
+<div>Loading...</div>
+} @if (error) {
+<div>Error :</div>
+} @if (this.display$ | async) { @for (post of posts; track $index) {
+<p>{{ post.title }}</p>
+} }
+<div class="post-display" [innerHTML]="this.html | sanitizeHtml"></div>

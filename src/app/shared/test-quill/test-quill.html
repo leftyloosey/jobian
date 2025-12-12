@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <input type="text" formControlName="title" />
+  <quill-editor
+    [styles]="{ height: '400px' }"
+    formControlName="html"
+    (onEditorCreated)="created($event)"
+  ></quill-editor>
+</form>
+<!-- <button (click)="setHTML()">quill</button> -->
+<button (click)="insert()">insert</button>
+<button (click)="getBucketContents()">getbucket</button>
+<button (click)="saveNewPost()">new post</button>
+
+<div class="disply" [innerHTML]="this.html | sanitizeHtml"></div>

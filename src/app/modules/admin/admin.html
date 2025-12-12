@@ -1,0 +1,13 @@
+@if (loading) {
+<div>Loading...</div>
+} @if (error) {
+<div>Error :</div>
+} @for (ministry of ministry$| async; track ministry.id;) {
+<app-ministry-row
+  (idUpForDelete)="deleteMinistry($event)"
+  [ministry]="ministry"
+/>
+} @if (this.submit$ | async) { }
+
+<button (click)="createMinistry()">new ministry</button>
+<button (click)="openDialog()">open dialog</button>

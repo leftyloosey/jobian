@@ -1,0 +1,51 @@
+<section class="top-form">
+  <form [formGroup]="createMinistryForm">
+    <div>
+      <mat-form-field hideRequiredMarker>
+        <mat-label for="title">Title</mat-label>
+        <input
+          autocomplete="off"
+          type="text"
+          formControlName="title"
+          matInput
+          required
+        />
+        <!-- @if (original?.invalid && (original?.dirty)) {
+        <div>
+          @if (original?.hasError('required')) {
+          <div class="error">Original is required.</div>
+          }
+        </div>
+        } -->
+      </mat-form-field>
+      <mat-form-field hideRequiredMarker>
+        <mat-label for="heading">Heading</mat-label>
+        <input
+          autocomplete="off"
+          type="text"
+          formControlName="heading"
+          matInput
+          required
+        />
+        <!-- @if (original?.invalid && (original?.dirty)) {
+        <div>
+          @if (original?.hasError('required')) {
+          <div class="error">Original is required.</div>
+          }
+        </div>
+        } -->
+      </mat-form-field>
+    </div>
+
+    <mat-dialog-actions align="center">
+      <button
+        class="submission-field__button"
+        (click)="closeAndSave($event)"
+        matButton="filled"
+        color="secondary"
+      >
+        Create New
+      </button>
+    </mat-dialog-actions>
+  </form>
+</section>

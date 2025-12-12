@@ -1,0 +1,11 @@
+<!-- <section class="editor"> -->
+<form [formGroup]="form" class="editor">
+  <input type="text" formControlName="title" placeholder="title" />
+  <quill-editor
+    [styles]="{ height: '400px' }"
+    formControlName="html"
+    (onEditorCreated)="created($event)"
+  ></quill-editor>
+  <button (click)="saveNewPost()">new post</button>
+</form>
+<!-- </section> -->
