@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { MainMinistry } from './modules/main-ministry/main-ministry';
+import { MainCollection } from './modules/main-collection/main-collection';
+
 import { About } from './modules/about/about';
 import { Team } from './modules/team/team';
 import { Contact } from './modules/contact/contact';
@@ -22,8 +23,8 @@ export const routes: Routes = [
   {
     path: 'main',
     loadComponent: () =>
-      import('./modules/main-ministry/main-ministry').then(
-        (load) => load.MainMinistry
+      import('./modules/main-collection/main-collection').then(
+        (load) => load.MainCollection
       ),
   },
   {

@@ -2,12 +2,12 @@
 <div>Loading...</div>
 } @if (error) {
 <div>Error :</div>
-} @for (ministry of ministry$| async; track ministry.id;) {
-<app-ministry-row
-  (idUpForDelete)="deleteMinistry($event)"
-  [ministry]="ministry"
+} @for (collection of collection$| async; track collection.id;) {
+<app-collection-row
+  (idUpForDelete)="deleteCollection($event)"
+  [collection]="collection"
 />
 } @if (this.submit$ | async) { }
 
-<button (click)="createMinistry()">new ministry</button>
+<button (click)="createCollection()">new collection</button>
 <button (click)="openDialog()">open dialog</button>

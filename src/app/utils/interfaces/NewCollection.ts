@@ -1,12 +1,12 @@
 import { Post } from './NewPost';
 
-export interface NewMinistry {
+export interface NewCollection {
   title: string;
   heading: string;
   authorId: number;
 }
 
-export interface Ministry extends NewMinistry {
+export interface Collection extends NewCollection {
   id: number;
   timestamp: Date;
   posts: Post[];

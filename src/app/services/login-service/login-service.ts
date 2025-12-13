@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { environment } from '../../../environments/environment';
 // import { LoginAttempt } from '../../utils/interfaces/LoginAttempt';
-import { catchError, EMPTY, Subscription } from 'rxjs';
+import { catchError, EMPTY, Observable, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 // import { loggedIn } from '../../utils/constants/log-cookie';
@@ -11,6 +11,8 @@ import { jwtDecode } from 'jwt-decode';
 // import { NameService } from '../name-service/name-service';
 import { NameService } from '../name-service/name-service';
 import { LoginAttempt } from '../../utils/interfaces/LoginAttempt';
+import { Apollo } from 'apollo-angular';
+import { GET_LOGIN_TOKEN } from './login-gql/login-gql';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +22,24 @@ export class LoginService {
     private http: HttpClient,
     private cookie: CookieService,
     private router: Router,
-    private name: NameService
+    private name: NameService,
+    private apollo: Apollo
   ) {}
 
-  public attemptLogin = (submit: LoginAttempt) => {
+  public attemptLogin = (
+    submit: LoginAttempt
+  ): Observable<Apollo.MutateResult<unknown>> => {
+    // const { email, password } = submit;
+    const input: LoginAttempt = {
+      email: submit.email,
+      password: submit.password,
+    };
+    return this.apollo.mutate({
+      mutation: GET_LOGIN_TOKEN,
+      variables: {
+        input,
+      },
+    });
     // const url = `${environment.apiBaseUrl}/auth/login`;
     // return this.http
     //   .post<LoginAttempt>(url, submit)

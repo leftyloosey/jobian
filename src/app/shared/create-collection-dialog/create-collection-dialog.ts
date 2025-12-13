@@ -15,7 +15,7 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-create-ministry-dialog',
+  selector: 'app-create-collection-dialog',
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -25,21 +25,21 @@ import { MatInputModule } from '@angular/material/input';
     // MatDialogContent,
     MatLabel,
   ],
-  templateUrl: './create-ministry-dialog.html',
-  styleUrl: './create-ministry-dialog.scss',
+  templateUrl: './create-collection-dialog.html',
+  styleUrl: './create-collection-dialog.scss',
 })
-export class CreateMinistryDialog {
-  // public dialogRef: MatDialogRef<CreateMinistryDialog>;
+export class CreateCollectionDialog {
+  // public dialogRef: MatDialogRef<CreateCollectionDialog>;
 
-  protected createMinistryForm = new FormGroup({
+  protected createCollectionForm = new FormGroup({
     title: new FormControl('', Validators.required),
     heading: new FormControl('', Validators.required),
     // partOfSpeech: new FormControl('', Validators.required),
   });
-  constructor(public dialogRef: MatDialogRef<CreateMinistryDialog>) {}
+  constructor(public dialogRef: MatDialogRef<CreateCollectionDialog>) {}
   protected closeAndSave(e: Event) {
     e.preventDefault();
-    const { title, heading } = this.createMinistryForm.value;
+    const { title, heading } = this.createCollectionForm.value;
 
     this.dialogRef.close({ title, heading });
   }
