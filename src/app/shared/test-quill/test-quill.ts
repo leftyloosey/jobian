@@ -141,7 +141,7 @@ export class TestQuill {
 
     const delta = this.quill.getContents();
     this.post
-      .newPost(title, delta, 1)
+      .newPost(title, delta.ops, 1)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         console.log(result);

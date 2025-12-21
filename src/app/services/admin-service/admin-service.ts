@@ -6,6 +6,5 @@ import { Collection } from '../../utils/interfaces/NewCollection';
   providedIn: 'root',
 })
 export class AdminService {
-  // public ministries$ = new Subject<Ministry[]>();
   public ministries$ = new BehaviorSubject<Collection[]>([]);
 }

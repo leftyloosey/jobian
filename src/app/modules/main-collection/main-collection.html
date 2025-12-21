@@ -1,1 +1,6 @@
-<p>main-ministry works!</p>
+<!-- @if (this.display$ | async) { } -->
+@for (collection of this.display$| async; track collection.title;) {
+
+<p (click)="openCollection(collection.title)">{{ collection.title }}</p>
+}
+<h1>{{ current }}</h1>

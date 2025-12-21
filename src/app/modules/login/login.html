@@ -1,4 +1,5 @@
-@if (this.isValid$ | async) {}
+@if (this.isValid$ | async) {} @if (this.login$ | async) {} @if (this.create$ |
+async) {}
 <div class="form-container">
   <form [formGroup]="loginForm" class="form-container__login-fields">
     <mat-form-field hideRequiredMarker>

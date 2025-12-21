@@ -1,13 +1,17 @@
-@if (loading) {
+<!-- @if (loading) {
 <div>Loading...</div>
-} @if (error) {
+}  -->
+@if (error) {
 <div>Error :</div>
-} @for (collection of collection$| async; track collection.id;) {
-<app-collection-row
+} @for (collection of collection$| async; track collection.title;) {
+<app-collection-admin-row
   (idUpForDelete)="deleteCollection($event)"
   [collection]="collection"
 />
-} @if (this.submit$ | async) { }
+} @if (this.submit$ | async) { } @if (this.delete$ | async) { }
 
-<button (click)="createCollection()">new collection</button>
-<button (click)="openDialog()">open dialog</button>
+<!-- <button (click)="createCollection()">new collection</button> -->
+<button (click)="openDialog()">create collection</button>
+<!-- <button (click)="openDonut()">test donut</button>
+<button (click)="openDonut2()">testy donut2</button> -->
+<!-- <router-outlet></router-outlet> -->

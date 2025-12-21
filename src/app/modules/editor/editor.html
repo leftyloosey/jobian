@@ -1,3 +1,4 @@
+@if (submit$ | async) {} @if (display$ | async) {} @if (delete$ | async) {}
 <!-- <section class="editor"> -->
 <form [formGroup]="form" class="editor">
   <input type="text" formControlName="title" placeholder="title" />
@@ -6,6 +7,7 @@
     formControlName="html"
     (onEditorCreated)="created($event)"
   ></quill-editor>
-  <button (click)="saveNewPost()">new post</button>
+  <button (click)="saveChanges()">new post</button>
+  <button (click)="deletePost()">delete post</button>
 </form>
 <!-- </section> -->

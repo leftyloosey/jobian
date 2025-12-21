@@ -1,8 +1,8 @@
-import { Delta } from 'quill';
+import { Delta, Op } from 'quill';
 export interface NewPost {
   title: string;
-  content: Delta;
-  ministryId: number;
+  content: Op[];
+  collectionId: number;
 }
 export interface Post extends NewPost {
   timestamp: Date;

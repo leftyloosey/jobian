@@ -1,58 +1,65 @@
 import { Component, inject } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { CollectionRow } from '../../shared/collection-row/collection-row';
-import { CollectionService } from '../../services/collection-service/collection-service';
-import { Collection } from '../../utils/interfaces/NewCollection';
+import { CollectionAdminRow } from '../../shared/collection-admin-row/collection-admin-row';
 import { CreateCollectionDialog } from '../../shared/create-collection-dialog/create-collection-dialog';
 import { MatButtonModule } from '@angular/material/button';
-
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  CreateCollectionInputMutation,
+  RemoveCollectionMutation,
+} from '../../../graphql/generated';
+import { Apollo } from 'apollo-angular';
+import { CollectionService } from '../../services/collection-service/collection-service';
+
 @Component({
   selector: 'app-admin',
-  imports: [AsyncPipe, CollectionRow, MatButtonModule, MatDialogModule],
+  imports: [
+    AsyncPipe,
+    MatButtonModule,
+    MatDialogModule,
+    AsyncPipe,
+    CollectionAdminRow,
+  ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
 export class Admin {
-  public collection$!: Observable<Collection[]>;
-  protected submit$!: Observable<any>;
-
-  protected loading = true;
+  public collection$!: Observable<any>;
+  protected submit$!: Observable<
+    Apollo.MutateResult<CreateCollectionInputMutation>
+  >;
+  protected delete$!: Observable<Apollo.MutateResult<RemoveCollectionMutation>>;
+  // protected loading = true;
   protected error: any;
 
   readonly dialog = inject(MatDialog);
 
   constructor(private collection: CollectionService) {}
 
-  openDialog() {
-    const dialogRef = this.dialog.open(CreateCollectionDialog);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      const { title, heading } = result;
-    });
-  }
-
   ngOnInit() {
-    this.collection$ = this.collection
-      .getCollections(this.loading, this.error)
-      .valueChanges.pipe(
-        map((result: any) => {
-          const collections = result?.data?.collectionsWithPosts;
-
-          this.loading = result.loading;
-          this.error = result.error;
-          return collections;
-        })
-      );
-  }
-  protected async createCollection() {
-    this.submit$ = this.collection
-      .newCollection('sample_title1', 'sample-heading', 1)
-      .pipe(tap((submit) => submit));
+    this.collection$ = this.collection.watchCollections().pipe(
+      map((data) => {
+        return data.data?.collectionByUser;
+      })
+    );
   }
 
-  protected async deleteCollection(ministryId: number) {
-    this.submit$ = this.collection.deleteCollection(ministryId);
+  protected createCollection(title: string, heading: string) {
+    this.submit$ = this.collection.createCollection(title, heading);
+  }
+
+  protected deleteCollection(collectionId: number) {
+    this.delete$ = this.collection.deleteCollection(collectionId);
+  }
+
+  protected openDialog() {
+    const dialogRef = this.dialog.open(CreateCollectionDialog);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const { title, heading } = result;
+        this.createCollection(title, heading);
+      }
+    });
   }
 }

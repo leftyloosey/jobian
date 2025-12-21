@@ -1,0 +1,141 @@
+scalar JSON
+scalar Date
+
+type Post {
+  id: Int!
+  timestamp: Date
+  title: String
+  content: JSON
+  published: Boolean
+  collection: User
+  collectionId: Int
+}
+
+input CreatePostInput {
+  title: String
+  content: JSON
+  collectionId: Int
+}
+
+input UpdatePostInput {
+  id: Int!
+  title: String
+  content: JSON
+  published: Boolean
+  modified: Date
+}
+
+type Query {
+  posts: [Post]!
+  post(id: Int!): Post
+  postsInCollection(id: Int!): [Post]!
+}
+
+type Mutation {
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post
+}
+
+scalar JSON
+scalar Date
+
+type Post {
+  id: Int!
+  timestamp: Date
+  title: String
+  content: JSON
+  published: Boolean
+  collection: User
+  collectionId: Int
+}
+
+input CreatePostInput {
+  title: String
+  content: JSON
+  collectionId: Int
+}
+
+input UpdatePostInput {
+  id: Int!
+  title: String
+  content: JSON
+  published: Boolean
+  modified: Date
+}
+
+type Query {
+  posts: [Post]!
+  post(id: Int!): Post
+  postsInCollection(id: Int!): [Post]!
+}
+
+type Mutation {
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post
+}
+
+type Collection {
+  id: Int!
+  title: String
+  heading: String
+  posts: [Post]
+  author: User
+  authorId: Int
+  timestamp: Date
+}
+
+input CreateCollectionInput {
+  title: String
+  heading: String
+  authorId: Int
+}
+
+input UpdateCollectionInput {
+  id: Int!
+  title: String
+  heading: String
+}
+
+type Query {
+  collections: [Collection]!
+  collectionsWithPosts: [Collection]!
+  collection(id: Int!): Collection
+  collectionByUser(authorId: Int!): [Collection]!
+}
+
+type Mutation {
+  createCollection(createCollectionInput: CreateCollectionInput!): Collection!
+  updateCollection(updateCollectionInput: UpdateCollectionInput!): Collection!
+  removeCollection(id: Int!): Collection
+}
+
+type User {
+  id: Int!
+  name: String!
+  email: String
+  password: String
+  posts: [Post]
+}
+
+input CreateUserInput {
+  name: String!
+  email: String
+  password: String
+}
+
+input UpdateUserInput {
+  id: Int!
+}
+
+type Query {
+  users: [User]!
+  user(id: Int!): User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User
+}

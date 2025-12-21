@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  importProvidersFrom,
   inject,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
@@ -7,23 +8,47 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { InMemoryCache } from '@apollo/client';
 import { provideQuillConfig } from 'ngx-quill/config';
 import ImageResize from '@mgreminger/quill-image-resize-module';
-import Quill, { Delta } from 'quill';
+import Quill from 'quill';
 import { environment } from '../environments/environment';
 Quill.register('modules/imageResize', ImageResize);
-// console.log(Quill.imports);
 
 import { routes } from './app.routes';
+import { LoadingService } from './services/loading-service/loading-service';
+import { LoadingInterceptor } from './utils/interceptors/loading-interceptor/loading-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    importProvidersFrom(
+      // BrowserModule,
+      // AppRoutingModule,
+      // RouterModule,
+      LoadingService
+    ),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true,
+    },
+    // provideAppInitializer(() => {
+    //   const config = inject(ConfigService);
+    // }),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideRouter(routes),
+    provideRouter(
+      routes
+      // withNavigationErrorHandler((error) => {
+      //   sig.set(error.url);
+      //   const router = inject(Router);
+      //   router.navigate(['/redirect', { redirectValue: error.url }]);
+      // })
+    ),
+    // provideHttpClient(),
     provideHttpClient(),
+    // provideHttpClient(withInterceptors([loggingInterceptor])),
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       return {

@@ -1,0 +1,10 @@
+<h2>{{ title }}</h2>
+<h3 (click)="promp()">{{ heading }}</h3>
+<!-- @if (this.posts$ | async) { } -->
+@if (submit$ | async) { } @if (data$ | async) { } @for (post of posts; track
+post?.id) {
+{{ post?.id }} | {{ post?.title }}
+<button (click)="editPost(post?.id ?? 0)">edit</button>
+}
+<div><button (click)="newPost()">new</button></div>
+<!-- <div><button (click)="newPost()">new</button></div> -->

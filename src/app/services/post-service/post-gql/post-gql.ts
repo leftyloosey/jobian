@@ -4,7 +4,6 @@ export const CREATE_POST = gql`
   mutation CreatePostInput($input: CreatePostInput!) {
     createPost(createPostInput: $input) {
       title
-      ministryId
       content
     }
   }
@@ -15,9 +14,16 @@ export const FIND_ONE_POST = gql`
     post(id: $id) {
       title
       content
-      author {
-        id
-      }
+    }
+  }
+`;
+
+export const POSTS_IN_COLLECTION = gql`
+  query PostsInCollection($collectionId: Int!) {
+    postsInCollection(collectionId: $collectionId) {
+      title
+      content
+      id
     }
   }
 `;
@@ -26,7 +32,6 @@ export const UPDATE_POST = gql`
   mutation updatePostInput($input: UpdatePostInput!) {
     updatePost(updatePostInput: $input) {
       title
-      authorId
       content
     }
   }
