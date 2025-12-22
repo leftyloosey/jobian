@@ -3,35 +3,22 @@ import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T
-> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** Date custom scalar type */
-  Date: { input: any; output: any };
+  Date: { input: any; output: any; }
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: { input: any; output: any };
+  JSON: { input: any; output: any; }
 };
 
 export type Auth = {
@@ -90,49 +77,61 @@ export type Mutation = {
   updateUser: User;
 };
 
+
 export type MutationCreateAuthArgs = {
   createAuthInput: CreateAuthInput;
 };
+
 
 export type MutationCreateCollectionArgs = {
   createCollectionInput: CreateCollectionInput;
 };
 
+
 export type MutationCreatePostArgs = {
   createPostInput: CreatePostInput;
 };
+
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserInput;
 };
 
+
 export type MutationRemoveAuthArgs = {
   id: Scalars['Int']['input'];
 };
+
 
 export type MutationRemoveCollectionArgs = {
   id: Scalars['Int']['input'];
 };
 
+
 export type MutationRemovePostArgs = {
   id: Scalars['Int']['input'];
 };
+
 
 export type MutationRemoveUserArgs = {
   id: Scalars['Int']['input'];
 };
 
+
 export type MutationUpdateAuthArgs = {
   updateAuthInput: UpdateAuthInput;
 };
+
 
 export type MutationUpdateCollectionArgs = {
   updateCollectionInput: UpdateCollectionInput;
 };
 
+
 export type MutationUpdatePostArgs = {
   updatePostInput: UpdatePostInput;
 };
+
 
 export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
@@ -158,30 +157,42 @@ export type Query = {
   collectionsWithPosts: Array<Maybe<Collection>>;
   post?: Maybe<Post>;
   posts: Array<Maybe<Post>>;
+  postsByCollectionTitle: Array<Maybe<Post>>;
   postsInCollection: Array<Maybe<Post>>;
   user?: Maybe<User>;
   users: Array<Maybe<User>>;
 };
 
+
 export type QueryAuthArgs = {
   createAuthInput: CreateAuthInput;
 };
+
 
 export type QueryCollectionByUserArgs = {
   authorId: Scalars['Int']['input'];
 };
 
+
 export type QueryCollectionWithPostsArgs = {
   id: Scalars['Int']['input'];
 };
+
 
 export type QueryPostArgs = {
   id: Scalars['Int']['input'];
 };
 
+
+export type QueryPostsByCollectionTitleArgs = {
+  collectionTitle: Scalars['String']['input'];
+};
+
+
 export type QueryPostsInCollectionArgs = {
   collectionId: Scalars['Int']['input'];
 };
+
 
 export type QueryUserArgs = {
   id: Scalars['Int']['input'];
@@ -227,450 +238,355 @@ export type CollectionByUserQueryVariables = Exact<{
   authorId: Scalars['Int']['input'];
 }>;
 
-export type CollectionByUserQuery = {
-  __typename?: 'Query';
-  collectionByUser: Array<{
-    __typename?: 'Collection';
-    title: string;
-    heading?: string | null;
-    id: number;
-    posts?: Array<{
-      __typename?: 'Post';
-      id: number;
-      title?: string | null;
-      content?: any | null;
-    } | null> | null;
-  } | null>;
-};
+
+export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, heading?: string | null, id: number, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null> };
 
 export type FindOneWithPostsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
-export type FindOneWithPostsQuery = {
-  __typename?: 'Query';
-  collectionWithPosts?: {
-    __typename?: 'Collection';
-    id: number;
-    title: string;
-    heading?: string | null;
-    posts?: Array<{
-      __typename?: 'Post';
-      id: number;
-      title?: string | null;
-      content?: any | null;
-    } | null> | null;
-  } | null;
-};
+
+export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null };
 
 export type CreateCollectionInputMutationVariables = Exact<{
   input: CreateCollectionInput;
 }>;
 
-export type CreateCollectionInputMutation = {
-  __typename?: 'Mutation';
-  createCollection: {
-    __typename?: 'Collection';
-    authorId: number;
-    title: string;
-    heading?: string | null;
-  };
-};
+
+export type CreateCollectionInputMutation = { __typename?: 'Mutation', createCollection: { __typename?: 'Collection', authorId: number, title: string, heading?: string | null } };
 
 export type UpdateCollectionInputMutationVariables = Exact<{
   input: UpdateCollectionInput;
 }>;
 
-export type UpdateCollectionInputMutation = {
-  __typename?: 'Mutation';
-  updateCollection: {
-    __typename?: 'Collection';
-    title: string;
-    heading?: string | null;
-  };
-};
+
+export type UpdateCollectionInputMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'Collection', title: string, heading?: string | null } };
 
 export type RemoveCollectionMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
-export type RemoveCollectionMutation = {
-  __typename?: 'Mutation';
-  removeCollection?: {
-    __typename?: 'Collection';
-    id: number;
-    title: string;
-    heading?: string | null;
-  } | null;
-};
+
+export type RemoveCollectionMutation = { __typename?: 'Mutation', removeCollection?: { __typename?: 'Collection', id: number, title: string, heading?: string | null } | null };
 
 export type CreateAuthInputMutationVariables = Exact<{
   input: CreateAuthInput;
 }>;
 
-export type CreateAuthInputMutation = {
-  __typename?: 'Mutation';
-  createAuth: { __typename?: 'Token'; token?: string | null };
-};
+
+export type CreateAuthInputMutation = { __typename?: 'Mutation', createAuth: { __typename?: 'Token', token?: string | null } };
 
 export type CreateUserInputMutationVariables = Exact<{
   input: CreateUserInput;
 }>;
 
-export type CreateUserInputMutation = {
-  __typename?: 'Mutation';
-  createUser: {
-    __typename?: 'User';
-    name: string;
-    email?: string | null;
-    password?: string | null;
-  };
-};
+
+export type CreateUserInputMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', name: string, email?: string | null, password?: string | null } };
 
 export type CreatePostInputMutationVariables = Exact<{
   input: CreatePostInput;
 }>;
 
-export type CreatePostInputMutation = {
-  __typename?: 'Mutation';
-  createPost: {
-    __typename?: 'Post';
-    title?: string | null;
-    content?: any | null;
-  };
-};
+
+export type CreatePostInputMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', title?: string | null, content?: any | null } };
 
 export type FindOneQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
-export type FindOneQuery = {
-  __typename?: 'Query';
-  post?: {
-    __typename?: 'Post';
-    title?: string | null;
-    content?: any | null;
-  } | null;
-};
+
+export type FindOneQuery = { __typename?: 'Query', post?: { __typename?: 'Post', title?: string | null, content?: any | null } | null };
 
 export type PostsInCollectionQueryVariables = Exact<{
   collectionId: Scalars['Int']['input'];
 }>;
 
-export type PostsInCollectionQuery = {
-  __typename?: 'Query';
-  postsInCollection: Array<{
-    __typename?: 'Post';
-    title?: string | null;
-    content?: any | null;
-    id: number;
-  } | null>;
-};
+
+export type PostsInCollectionQuery = { __typename?: 'Query', postsInCollection: Array<{ __typename?: 'Post', title?: string | null, content?: any | null, id: number } | null> };
+
+export type PostsByCollectionTitleQueryVariables = Exact<{
+  collectionTitle: Scalars['String']['input'];
+}>;
+
+
+export type PostsByCollectionTitleQuery = { __typename?: 'Query', postsByCollectionTitle: Array<{ __typename?: 'Post', title?: string | null, content?: any | null, id: number, collectionId?: number | null } | null> };
 
 export type UpdatePostInputMutationVariables = Exact<{
   input: UpdatePostInput;
 }>;
 
-export type UpdatePostInputMutation = {
-  __typename?: 'Mutation';
-  updatePost: {
-    __typename?: 'Post';
-    title?: string | null;
-    content?: any | null;
-  };
-};
+
+export type UpdatePostInputMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', title?: string | null, content?: any | null } };
 
 export type RemovePostMutationVariables = Exact<{
   input: Scalars['Int']['input'];
 }>;
 
-export type RemovePostMutation = {
-  __typename?: 'Mutation';
-  removePost?: {
-    __typename?: 'Post';
-    id: number;
-    title?: string | null;
-    content?: any | null;
-  } | null;
-};
+
+export type RemovePostMutation = { __typename?: 'Mutation', removePost?: { __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null };
 
 export const CollectionByUserDocument = gql`
-  query CollectionByUser($authorId: Int!) {
-    collectionByUser(authorId: $authorId) {
-      title
-      heading
+    query CollectionByUser($authorId: Int!) {
+  collectionByUser(authorId: $authorId) {
+    title
+    heading
+    id
+    posts {
       id
-      posts {
-        id
-        title
-        content
-      }
+      title
+      content
     }
   }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class CollectionByUserGQL extends Apollo.Query<
-  CollectionByUserQuery,
-  CollectionByUserQueryVariables
-> {
-  document = CollectionByUserDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
-  }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CollectionByUserGQL extends Apollo.Query<CollectionByUserQuery, CollectionByUserQueryVariables> {
+    document = CollectionByUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const FindOneWithPostsDocument = gql`
-  query FindOneWithPosts($id: Int!) {
-    collectionWithPosts(id: $id) {
+    query FindOneWithPosts($id: Int!) {
+  collectionWithPosts(id: $id) {
+    id
+    title
+    heading
+    posts {
       id
       title
-      heading
-      posts {
-        id
-        title
-        content
-      }
+      content
     }
   }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class FindOneWithPostsGQL extends Apollo.Query<
-  FindOneWithPostsQuery,
-  FindOneWithPostsQueryVariables
-> {
-  document = FindOneWithPostsDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
-  }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FindOneWithPostsGQL extends Apollo.Query<FindOneWithPostsQuery, FindOneWithPostsQueryVariables> {
+    document = FindOneWithPostsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateCollectionInputDocument = gql`
-  mutation CreateCollectionInput($input: CreateCollectionInput!) {
-    createCollection(createCollectionInput: $input) {
-      authorId
-      title
-      heading
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class CreateCollectionInputGQL extends Apollo.Mutation<
-  CreateCollectionInputMutation,
-  CreateCollectionInputMutationVariables
-> {
-  document = CreateCollectionInputDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation CreateCollectionInput($input: CreateCollectionInput!) {
+  createCollection(createCollectionInput: $input) {
+    authorId
+    title
+    heading
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateCollectionInputGQL extends Apollo.Mutation<CreateCollectionInputMutation, CreateCollectionInputMutationVariables> {
+    document = CreateCollectionInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UpdateCollectionInputDocument = gql`
-  mutation UpdateCollectionInput($input: UpdateCollectionInput!) {
-    updateCollection(updateCollectionInput: $input) {
-      title
-      heading
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class UpdateCollectionInputGQL extends Apollo.Mutation<
-  UpdateCollectionInputMutation,
-  UpdateCollectionInputMutationVariables
-> {
-  document = UpdateCollectionInputDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation UpdateCollectionInput($input: UpdateCollectionInput!) {
+  updateCollection(updateCollectionInput: $input) {
+    title
+    heading
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateCollectionInputGQL extends Apollo.Mutation<UpdateCollectionInputMutation, UpdateCollectionInputMutationVariables> {
+    document = UpdateCollectionInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const RemoveCollectionDocument = gql`
-  mutation RemoveCollection($id: Int!) {
-    removeCollection(id: $id) {
-      id
-      title
-      heading
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class RemoveCollectionGQL extends Apollo.Mutation<
-  RemoveCollectionMutation,
-  RemoveCollectionMutationVariables
-> {
-  document = RemoveCollectionDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation RemoveCollection($id: Int!) {
+  removeCollection(id: $id) {
+    id
+    title
+    heading
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveCollectionGQL extends Apollo.Mutation<RemoveCollectionMutation, RemoveCollectionMutationVariables> {
+    document = RemoveCollectionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateAuthInputDocument = gql`
-  mutation CreateAuthInput($input: CreateAuthInput!) {
-    createAuth(createAuthInput: $input) {
-      token
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class CreateAuthInputGQL extends Apollo.Mutation<
-  CreateAuthInputMutation,
-  CreateAuthInputMutationVariables
-> {
-  document = CreateAuthInputDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation CreateAuthInput($input: CreateAuthInput!) {
+  createAuth(createAuthInput: $input) {
+    token
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateAuthInputGQL extends Apollo.Mutation<CreateAuthInputMutation, CreateAuthInputMutationVariables> {
+    document = CreateAuthInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateUserInputDocument = gql`
-  mutation CreateUserInput($input: CreateUserInput!) {
-    createUser(createUserInput: $input) {
-      name
-      email
-      password
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class CreateUserInputGQL extends Apollo.Mutation<
-  CreateUserInputMutation,
-  CreateUserInputMutationVariables
-> {
-  document = CreateUserInputDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation CreateUserInput($input: CreateUserInput!) {
+  createUser(createUserInput: $input) {
+    name
+    email
+    password
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateUserInputGQL extends Apollo.Mutation<CreateUserInputMutation, CreateUserInputMutationVariables> {
+    document = CreateUserInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreatePostInputDocument = gql`
-  mutation CreatePostInput($input: CreatePostInput!) {
-    createPost(createPostInput: $input) {
-      title
-      content
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class CreatePostInputGQL extends Apollo.Mutation<
-  CreatePostInputMutation,
-  CreatePostInputMutationVariables
-> {
-  document = CreatePostInputDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation CreatePostInput($input: CreatePostInput!) {
+  createPost(createPostInput: $input) {
+    title
+    content
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreatePostInputGQL extends Apollo.Mutation<CreatePostInputMutation, CreatePostInputMutationVariables> {
+    document = CreatePostInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const FindOneDocument = gql`
-  query findOne($id: Int!) {
-    post(id: $id) {
-      title
-      content
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class FindOneGQL extends Apollo.Query<
-  FindOneQuery,
-  FindOneQueryVariables
-> {
-  document = FindOneDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    query findOne($id: Int!) {
+  post(id: $id) {
+    title
+    content
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FindOneGQL extends Apollo.Query<FindOneQuery, FindOneQueryVariables> {
+    document = FindOneDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const PostsInCollectionDocument = gql`
-  query PostsInCollection($collectionId: Int!) {
-    postsInCollection(collectionId: $collectionId) {
-      title
-      content
-      id
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class PostsInCollectionGQL extends Apollo.Query<
-  PostsInCollectionQuery,
-  PostsInCollectionQueryVariables
-> {
-  document = PostsInCollectionDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    query PostsInCollection($collectionId: Int!) {
+  postsInCollection(collectionId: $collectionId) {
+    title
+    content
+    id
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PostsInCollectionGQL extends Apollo.Query<PostsInCollectionQuery, PostsInCollectionQueryVariables> {
+    document = PostsInCollectionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const PostsByCollectionTitleDocument = gql`
+    query PostsByCollectionTitle($collectionTitle: String!) {
+  postsByCollectionTitle(collectionTitle: $collectionTitle) {
+    title
+    content
+    id
+    collectionId
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PostsByCollectionTitleGQL extends Apollo.Query<PostsByCollectionTitleQuery, PostsByCollectionTitleQueryVariables> {
+    document = PostsByCollectionTitleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UpdatePostInputDocument = gql`
-  mutation updatePostInput($input: UpdatePostInput!) {
-    updatePost(updatePostInput: $input) {
-      title
-      content
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class UpdatePostInputGQL extends Apollo.Mutation<
-  UpdatePostInputMutation,
-  UpdatePostInputMutationVariables
-> {
-  document = UpdatePostInputDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation updatePostInput($input: UpdatePostInput!) {
+  updatePost(updatePostInput: $input) {
+    title
+    content
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdatePostInputGQL extends Apollo.Mutation<UpdatePostInputMutation, UpdatePostInputMutationVariables> {
+    document = UpdatePostInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const RemovePostDocument = gql`
-  mutation RemovePost($input: Int!) {
-    removePost(id: $input) {
-      id
-      title
-      content
-    }
-  }
-`;
-
-@Injectable({
-  providedIn: 'root',
-})
-export class RemovePostGQL extends Apollo.Mutation<
-  RemovePostMutation,
-  RemovePostMutationVariables
-> {
-  document = RemovePostDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+    mutation RemovePost($input: Int!) {
+  removePost(id: $input) {
+    id
+    title
+    content
   }
 }
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemovePostGQL extends Apollo.Mutation<RemovePostMutation, RemovePostMutationVariables> {
+    document = RemovePostDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }

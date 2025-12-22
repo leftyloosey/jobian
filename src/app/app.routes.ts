@@ -12,7 +12,10 @@ import { CollectionEdit } from './modules/collection-edit/collection-edit';
 import { CollectionDisplay } from './modules/collection-display/collection-display';
 import { Redirector } from './shared/redirector/redirector';
 import { LoginGuard } from './utils/login-guard/login-guard';
-import { collectionsResolver } from './utils/resolvers/main-resolver-resolver';
+import {
+  collectionsResolver,
+  postResolver,
+} from './utils/resolvers/main-resolver-resolver';
 // import { redirectorResolver } from './services/redirect-service/redirector-resolver';
 
 export const routes: Routes = [
@@ -95,6 +98,7 @@ export const routes: Routes = [
   },
   {
     path: ':title',
+    resolve: [postResolver],
     loadComponent: () =>
       import('./modules/collection-display/collection-display').then(
         (load) => load.CollectionDisplay

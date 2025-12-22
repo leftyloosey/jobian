@@ -1,9 +1,15 @@
-@if (display$ | async) {} @for (post of fak; track post?.id;) {
+<!-- @if (display$ | async) {} -->
+
+<h2>{{ title }}</h2>
+
+<!-- @for (post of display; track post?.id;) { -->
+@for (post of posts; track post?.id;) {
 
 <p>{{ post?.title }}</p>
-} @if (titleMatch) {
-<h1>{{ title }}</h1>
 }
+<!-- @if (titleMatch) {
+<h1>{{ title }}</h1>
+} -->
 <!-- @if (display$) { @for (post of display$| async; track post?.id;) {
 
 <p>{{ post?.title }}</p>

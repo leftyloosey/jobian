@@ -10,6 +10,8 @@ import { firstValueFrom, map, tap } from 'rxjs';
 import {
   CollectionByUserGQL,
   CollectionByUserQuery,
+  PostsByCollectionTitleGQL,
+  PostsByCollectionTitleQuery,
 } from '../../../graphql/generated';
 import { NameService } from '../../services/name-service/name-service';
 
@@ -24,14 +26,11 @@ export const collectionsResolver: ResolveFn<
 };
 
 export const postResolver: ResolveFn<
-  Apollo.QueryResult<CollectionByUserQuery>
+  Apollo.QueryResult<PostsByCollectionTitleQuery>
 > = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  console.log('slobodan');
-  console.log(route);
-  console.log(state);
-  const collection = inject(CollectionByUserGQL);
-  const name = inject(NameService);
-  return collection
-    .fetch({ variables: { authorId: name.getUser() } })
+  const collectionTitle: string = route.params['title'];
+  const posts = inject(PostsByCollectionTitleGQL);
+  return posts
+    .fetch({ variables: { collectionTitle } })
     .pipe(map((stuff) => stuff));
 };

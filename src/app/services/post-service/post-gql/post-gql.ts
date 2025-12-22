@@ -27,6 +27,16 @@ export const POSTS_IN_COLLECTION = gql`
     }
   }
 `;
+export const POSTS_BY_COLLECTION_TITLE = gql`
+  query PostsByCollectionTitle($collectionTitle: String!) {
+    postsByCollectionTitle(collectionTitle: $collectionTitle) {
+      title
+      content
+      id
+      collectionId
+    }
+  }
+`;
 
 export const UPDATE_POST = gql`
   mutation updatePostInput($input: UpdatePostInput!) {

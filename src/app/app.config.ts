@@ -8,7 +8,11 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { InMemoryCache } from '@apollo/client';
 import { provideQuillConfig } from 'ngx-quill/config';
 import ImageResize from '@mgreminger/quill-image-resize-module';
@@ -46,7 +50,6 @@ export const appConfig: ApplicationConfig = {
       //   router.navigate(['/redirect', { redirectValue: error.url }]);
       // })
     ),
-    // provideHttpClient(),
     provideHttpClient(),
     // provideHttpClient(withInterceptors([loggingInterceptor])),
     provideApollo(() => {

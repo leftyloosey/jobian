@@ -13,6 +13,8 @@ export function loggingInterceptor(
   return next(req).pipe(
     tap((event) => {
       if (event.type === HttpEventType.Response) {
+        // console.log('event:', event);
+        // console.log('req:', req);
         console.log(req.url, 'returned a response with status', event.status);
       }
     })
