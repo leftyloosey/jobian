@@ -56,13 +56,16 @@ export class CollectionDisplay {
       )
       .pipe(
         tap((item: any) => {
-          setTimeout(() => {
-            if (!this.titleMatch) this.router.navigate(['/main']);
-          }, 1000);
+          // setTimeout(() => {
+          // if (!this.titleMatch) this.router.navigate(['/main']);
+          // }, 1000);
           if (item) this.fak = item.postsInCollection;
 
           // return item;
         })
       );
+    setTimeout(() => {
+      if (!this.titleMatch) this.router.navigate(['/main']);
+    }, 1000);
   }
 }
