@@ -1,0 +1,32 @@
+<img
+  #sloop
+  [hidden]="headerImageHidden"
+  [src]="this.receivedImageString()"
+  alt="huey"
+  id="sloop"
+/>
+
+<input
+  hidden
+  #file
+  id="file"
+  type="file"
+  (change)="
+    this.upload.handleFileInput($event, this.canvasRef, this.headerImageString)
+  "
+/>
+<div class="file-upload">
+  <button
+    mat-mini-fab
+    color="primary"
+    class="upload-btn"
+    (click)="file.click()"
+  >
+    <button mat-icon-button aria-label="Attach file">
+      <mat-icon fontIcon="attach_file"></mat-icon>
+    </button>
+  </button>
+  Header Image
+
+  <canvas #canvasImage hidden width="10" height="10"></canvas>
+</div>
