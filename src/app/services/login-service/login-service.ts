@@ -14,11 +14,11 @@ export class LoginService {
   constructor(
     private cookie: CookieService,
     private name: NameService,
-    private apollo: Apollo
+    private apollo: Apollo,
   ) {}
 
   public attemptLogin = (
-    submit: LoginAttempt
+    submit: LoginAttempt,
   ): Observable<Apollo.MutateResult<unknown>> => {
     const input: LoginAttempt = {
       email: submit.email,
@@ -33,12 +33,12 @@ export class LoginService {
   };
 
   public attemptCreate = (
-    submit: LoginAttempt
+    input: LoginAttempt,
   ): Observable<Apollo.MutateResult<unknown>> => {
     return this.apollo.mutate({
       mutation: CREATE_USER,
       variables: {
-        submit,
+        input,
       },
     });
   };

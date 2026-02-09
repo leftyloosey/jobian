@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -7,13 +7,14 @@ import {
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import {
+  MAT_DIALOG_DATA,
   MatDialogActions,
-  // MatDialogContent,
   MatDialogRef,
 } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { UploadComponent } from '../upload-component/upload-component';
+import { Collection } from '../../../graphql/generated';
 @Component({
   selector: 'app-create-collection-dialog',
   imports: [
@@ -22,25 +23,48 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatButton,
     MatDialogActions,
-    // MatDialogContent,
     MatLabel,
+    UploadComponent,
   ],
   templateUrl: './create-collection-dialog.html',
   styleUrl: './create-collection-dialog.scss',
 })
 export class CreateCollectionDialog {
-  // public dialogRef: MatDialogRef<CreateCollectionDialog>;
+  headerString: string = '';
+  collectionId: number = 0;
+
+  mimetypes!: ['image/png', 'image/jpeg'];
 
   protected createCollectionForm = new FormGroup({
     title: new FormControl('', Validators.required),
     heading: new FormControl('', Validators.required),
-    // partOfSpeech: new FormControl('', Validators.required),
   });
-  constructor(public dialogRef: MatDialogRef<CreateCollectionDialog>) {}
+  constructor(
+    public dialogRef: MatDialogRef<CreateCollectionDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Collection,
+  ) {
+    if (data) {
+      this.createCollectionForm.setValue({
+        title: data?.title,
+        heading: data?.heading,
+      });
+      this.headerString = data.headerImageString;
+      this.collectionId = data.id;
+    }
+    console.log(this.headerString);
+  }
+
   protected closeAndSave(e: Event) {
     e.preventDefault();
+
     const { title, heading } = this.createCollectionForm.value;
 
-    this.dialogRef.close({ title, heading });
+    let headerImageString = this.headerString;
+    let id = this.collectionId;
+    this.dialogRef.close({ id, title, heading, headerImageString });
+  }
+
+  protected receiveHeaderImageString($event: string) {
+    this.headerString = $event;
   }
 }

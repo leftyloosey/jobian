@@ -54,13 +54,13 @@ export class Login {
   constructor(
     private login: LoginService,
     private router: Router,
-    private name: NameService
+    private name: NameService,
   ) {
     this.isValid$ = this.loginForm.statusChanges.pipe(
       tap((changes) => {
         if (changes === 'VALID') this.formInvalid = false;
         if (changes !== 'VALID') this.formInvalid = true;
-      })
+      }),
     );
   }
 
@@ -75,7 +75,7 @@ export class Login {
           console.log(token);
           this.name.extractIdFromResult(token);
           this.router.navigate(['/admin']);
-        })
+        }),
       );
     }
   }
@@ -85,7 +85,12 @@ export class Login {
     let attempt: LoginAttempt;
     if (email && password && passwordConfirm === password) {
       attempt = { email, password };
-      this.login.attemptCreate(attempt).pipe(tap((create) => create));
+      this.create$ = this.login.attemptCreate(attempt).pipe(
+        tap((create) => {
+          window.alert('User created.');
+          return create;
+        }),
+      );
     } else {
       window.alert('Passwords do not match');
     }

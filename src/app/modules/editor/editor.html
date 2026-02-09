@@ -1,13 +1,19 @@
-@if (submit$ | async) {} @if (display$ | async) {} @if (delete$ | async) {}
-<!-- <section class="editor"> -->
+@if (newPost | async) {}
+@if (updatePost | async) {}
+@if (watchPost | async) {}
+@if (deletePost | async) {}
+
 <form [formGroup]="form" class="editor">
   <input type="text" formControlName="title" placeholder="title" />
   <quill-editor
     [styles]="{ height: '400px' }"
     formControlName="html"
-    (onEditorCreated)="created($event)"
+    (onEditorCreated)="createEditor($event)"
   ></quill-editor>
+
   <button (click)="saveChanges()">save changes</button>
-  <button (click)="deletePost()">delete post</button>
+  <button (click)="deleteThisPost($event)">delete post</button>
 </form>
-<!-- </section> -->
+<button class="editor" (click)="backToCollectionEdit()">
+  back to collections
+</button>

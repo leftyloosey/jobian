@@ -40,12 +40,12 @@ export class TestQuill {
   constructor(
     private fb: FormBuilder,
     private post: PostService,
-    private s3: S3Service
+    private s3: S3Service,
   ) {}
 
   created(editor: Quill) {
     this.quill = editor;
-    // this.two();
+    this.two();
   }
 
   two() {
@@ -53,7 +53,7 @@ export class TestQuill {
 
     const broback = () => {
       let fileInput = toolbar.container.querySelector(
-        'input.ql-image[type=file]'
+        'input.ql-image[type=file]',
       );
       if (fileInput == null) {
         fileInput = document.createElement('input');
@@ -62,7 +62,7 @@ export class TestQuill {
 
         fileInput.setAttribute(
           'accept',
-          toolbar.quill.uploader.options.mimetypes.join(', ')
+          toolbar.quill.uploader.options.mimetypes.join(', '),
         );
         fileInput.classList.add('ql-image');
         fileInput.addEventListener('change', () => {
@@ -70,19 +70,19 @@ export class TestQuill {
           const removedExtension = fileInput.value.replace(/^.*[\\/]/, '');
           // .replace(/\.[^.]+$/, '');
           console.log(removedExtension);
+          console.log(fileInput.files);
+          // const put: S3Put = {
+          //   Key: removedExtension,
+          //   Body: fileInput.files[0],
+          //   ContentType: 'image/png',
+          // };
 
-          const put: S3Put = {
-            Key: removedExtension,
-            Body: fileInput.files[0],
-            ContentType: 'image/png',
-          };
-
-          this.s3
-            .s3Put(put)
-            .then()
-            .finally(() => {
-              this.insertFromR2(removedExtension);
-            });
+          // this.s3
+          //   .s3Put(put)
+          //   .then()
+          //   .finally(() => {
+          //     this.insertFromR2(removedExtension);
+          //   });
 
           // .finally(() => console.log('ho no '));
 
@@ -137,15 +137,14 @@ export class TestQuill {
   }
 
   saveNewPost() {
-    const title = this.form.get('title')?.value ?? 'no_title';
-
-    const delta = this.quill.getContents();
-    this.post
-      .newPost(title, delta.ops, 1)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((result) => {
-        console.log(result);
-      });
+    // const title = this.form.get('title')?.value ?? 'no_title';
+    // const delta = this.quill.getContents();
+    // this.post
+    //   .newPost(title, delta.ops, 1)
+    //   .pipe(takeUntilDestroyed(this.destroyRef))
+    //   .subscribe((result) => {
+    //     console.log(result);
+    //   });
   }
 
   isQuillImage(op: any) {

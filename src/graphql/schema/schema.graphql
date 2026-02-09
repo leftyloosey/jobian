@@ -80,6 +80,7 @@ type Collection {
   id: Int!
   title: String
   heading: String
+  headerImageString: String
   posts: [Post]
   author: User
   authorId: Int
@@ -89,6 +90,8 @@ type Collection {
 input CreateCollectionInput {
   title: String
   heading: String
+  headerImageString: String
+
   authorId: Int
 }
 
@@ -96,6 +99,7 @@ input UpdateCollectionInput {
   id: Int!
   title: String
   heading: String
+  headerImageString: String
 }
 
 type Query {

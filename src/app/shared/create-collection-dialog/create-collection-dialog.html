@@ -36,6 +36,11 @@
         } -->
       </mat-form-field>
     </div>
+    <!-- <app-upload-component /> -->
+    <app-upload-component
+      [receivedImageString]="this.headerString"
+      (headerImageString)="receiveHeaderImageString($event)"
+    />
 
     <mat-dialog-actions align="center">
       <button

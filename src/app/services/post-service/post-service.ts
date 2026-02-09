@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { CREATE_POST, UPDATE_POST, DELETE_POST } from './post-gql/post-gql';
-import { Delta, Op } from 'quill';
 import { NewPost } from '../../utils/interfaces/NewPost';
 import { UpdatePost } from '../../utils/interfaces/UpdatePost';
-import { catchError, EMPTY, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import {
   FindOneGQL,
   PostsInCollectionGQL,
@@ -12,6 +10,7 @@ import {
   UpdatePostInputGQL,
   RemovePostGQL,
   PostsInCollectionQuery,
+  FindOneWithPostsDocument,
 } from '../../../graphql/generated';
 import { DeepPartial } from '@apollo/client/utilities';
 
@@ -20,20 +19,18 @@ import { DeepPartial } from '@apollo/client/utilities';
 })
 export class PostService {
   constructor(
-    private readonly apollo: Apollo,
     private posts: PostsInCollectionGQL,
     private findOne: FindOneGQL,
     private createPost: CreatePostInputGQL,
     private updatePost: UpdatePostInputGQL,
-    private removePost: RemovePostGQL
+    private removePost: RemovePostGQL,
   ) {}
 
   public postsInCollection(
-    collectionId: number
+    collectionId: number,
   ): Observable<
     PostsInCollectionQuery | DeepPartial<PostsInCollectionQuery> | undefined
   > {
-    console.log(collectionId);
     return this.posts
       .watch({
         variables: {
@@ -43,7 +40,7 @@ export class PostService {
       .valueChanges.pipe(
         map((result) => {
           return result.data;
-        })
+        }),
       );
   }
 
@@ -51,45 +48,46 @@ export class PostService {
     return this.findOne.watch({ variables: { id } });
   }
 
-  public newPost(
-    title: string,
-    content: Op[],
-    collectionId: number
-  ): Observable<Apollo.MutateResult<unknown>> {
-    const input: NewPost = { title, collectionId, content };
-    console.log(input);
-    return this.createPost.mutate({ variables: { input } });
-    // return this.apollo.mutate({
-    //   mutation: CREATE_POST,
-    //   variables: {
-    //     input,
-    //   },
-    // });
+  public newPost(input: NewPost): Observable<Apollo.MutateResult<unknown>> {
+    return this.createPost.mutate({
+      variables: { input },
+      refetchQueries: [
+        {
+          query: FindOneWithPostsDocument,
+          variables: { id: input.collectionId },
+        },
+      ],
+    });
   }
 
   public updateOne(
-    title: string,
-    content: Op[],
-    id: number
+    input2: UpdatePost,
   ): Observable<Apollo.MutateResult<unknown>> {
-    const input: UpdatePost = { title, id, content };
-    return this.updatePost.mutate({ variables: { input } });
-    // return this.apollo.mutate({
-    //   mutation: UPDATE_POST,
-    //   variables: {
-    //     input,
-    //   },
-    // });
+    const { title, id, content } = input2;
+    const input = { title, id, content };
+    return this.updatePost.mutate({
+      variables: { input },
+      refetchQueries: [
+        {
+          query: FindOneWithPostsDocument,
+          variables: { id: input2.collectionId },
+        },
+      ],
+    });
   }
 
-  public deletePost(id: number): Observable<Apollo.MutateResult<unknown>> {
-    const input = { id };
-    return this.removePost.mutate({ variables: { input: id } });
-    // return this.apollo.mutate({
-    //   mutation: DELETE_POST,
-    //   variables: {
-    //     input,
-    //   },
-    // });
+  public deletePost(
+    postId: number,
+    collectionId: number,
+  ): Observable<Apollo.MutateResult<unknown>> {
+    return this.removePost.mutate({
+      variables: { input: postId },
+      refetchQueries: [
+        {
+          query: FindOneWithPostsDocument,
+          variables: { id: collectionId },
+        },
+      ],
+    });
   }
 }

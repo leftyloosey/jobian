@@ -3,4 +3,5 @@ export interface UpdatePost {
   title: string;
   content: Op[];
   id: number;
+  collectionId: number;
 }

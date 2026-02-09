@@ -1,7 +1,6 @@
 import { Component, input, output } from '@angular/core';
-import { Collection } from '../../utils/interfaces/NewCollection';
 import { Router } from '@angular/router';
-
+import { CollectionWithPartial } from '../../utils/types/collection-types';
 @Component({
   selector: 'app-collection-admin-row',
   imports: [],
@@ -9,7 +8,8 @@ import { Router } from '@angular/router';
   styleUrl: './collection-admin-row.scss',
 })
 export class CollectionAdminRow {
-  public collection = input.required<Collection>();
+  public collection = input<CollectionWithPartial>();
+
   public idUpForDelete = output<number>();
 
   constructor(private router: Router) {}
@@ -19,6 +19,7 @@ export class CollectionAdminRow {
   }
 
   protected deleteCollection(): void {
-    this.idUpForDelete.emit(this.collection()?.id);
+    const toEmit = this.collection()?.id ?? 0;
+    this.idUpForDelete.emit(toEmit);
   }
 }

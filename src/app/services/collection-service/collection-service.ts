@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, Query } from 'apollo-angular';
-import { UpdateCollection } from '../../utils/interfaces/UpdateCollection';
-import { COLLECTIONS_BY_USER } from './collection-gql/collection-gql';
-import { UPDATE_COLLECTION } from './collection-gql/collection-gql';
-import { map, Observable, tap } from 'rxjs';
+import { UpsertCollection } from '../../utils/interfaces/UpsertCollection';
+import { map, Observable, Subject } from 'rxjs';
 import { NameService } from '../name-service/name-service';
 import {
   CreateCollectionInput,
@@ -20,7 +18,8 @@ import {
   FindOneWithPostsQueryVariables,
   UpdateCollectionInputGQL,
   UpdateCollectionInput,
-  UpdateCollectionInputMutation,
+  UpsertCollectionInputGQL,
+  UpsertCollectionInputMutation,
 } from '../../../graphql/generated';
 
 @Injectable({
@@ -28,13 +27,13 @@ import {
 })
 export class CollectionService {
   constructor(
-    private readonly apollo: Apollo,
     private name: NameService,
     private getCollections: CollectionByUserGQL,
     private findOne: FindOneWithPostsGQL,
     private updateOne: UpdateCollectionInputGQL,
     private newCollection: CreateCollectionInputGQL,
-    private removeCollection: RemoveCollectionGQL
+    private upsertColl: UpsertCollectionInputGQL,
+    private removeCollection: RemoveCollectionGQL,
   ) {}
 
   public watchCollections() {
@@ -43,7 +42,7 @@ export class CollectionService {
       .valueChanges.pipe(
         map((result) => {
           return result;
-        })
+        }),
       );
   }
 
@@ -51,24 +50,26 @@ export class CollectionService {
     id: Query.FetchOptions<
       FindOneWithPostsQueryVariables,
       Exact<{ id: Scalars['Int']['input'] }>
-    >
+    >,
   ): Observable<Apollo.QueryResult<FindOneWithPostsQuery>> {
     return this.findOne.fetch(id);
   }
 
   public watchOneWithPosts(id: number) {
-    const hoo = { variables: { id } };
-    return this.findOne.watch(hoo);
+    const collection = { variables: { id } };
+    return this.findOne.watch(collection);
   }
 
   public createCollection(
     title: string,
-    heading: string
+    heading: string,
+    headerImageString: string,
   ): Observable<Apollo.MutateResult<CreateCollectionInputMutation>> {
     const input: CreateCollectionInput = {
       authorId: this.name.getUser(),
       title,
       heading,
+      headerImageString,
     };
     return this.newCollection.mutate({
       variables: { input },
@@ -80,17 +81,25 @@ export class CollectionService {
       ],
     });
   }
+  public upsertCollection(
+    input: UpsertCollection,
+  ): Observable<Apollo.MutateResult<UpsertCollectionInputMutation>> {
+    input.authorId = this.name.getUser();
+    // };
+    return this.upsertColl.mutate({
+      variables: { input },
+      refetchQueries: [
+        {
+          query: CollectionByUserDocument,
+          variables: { authorId: this.name.getUser() },
+        },
+      ],
+    });
+  }
 
   public updateCollection(
-    input: UpdateCollectionInput
+    input: UpdateCollectionInput,
   ): Observable<Apollo.MutateResult<unknown>> {
-    // public updateCollection(
-    //   title: string,
-    //   heading: string,
-    //   id: number
-    // ): Observable<Apollo.MutateResult<unknown>> {
-    // const input: UpdateCollection = { title, id, heading };
-
     return this.updateOne.mutate({ variables: { input } });
 
     // return this.apollo.mutate({
@@ -108,8 +117,9 @@ export class CollectionService {
   }
 
   public deleteCollection(
-    collectionId: number
+    collectionId: number,
   ): Observable<Apollo.MutateResult<RemoveCollectionMutation>> {
+    console.log(collectionId);
     return this.removeCollection.mutate({
       variables: { id: collectionId },
       refetchQueries: [

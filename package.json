@@ -8,7 +8,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "generate": "graphql-codegen"
-
   },
   "prettier": {
     "overrides": [

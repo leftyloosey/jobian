@@ -29,12 +29,13 @@ export type Auth = {
 
 export type Collection = {
   __typename?: 'Collection';
-  author?: Maybe<User>;
+  author: User;
   authorId: Scalars['Int']['output'];
-  heading?: Maybe<Scalars['String']['output']>;
+  headerImageString: Scalars['String']['output'];
+  heading: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   posts?: Maybe<Array<Maybe<Post>>>;
-  timestamp?: Maybe<Scalars['Date']['output']>;
+  timestamp: Scalars['Date']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -44,9 +45,10 @@ export type CreateAuthInput = {
 };
 
 export type CreateCollectionInput = {
-  authorId?: InputMaybe<Scalars['Int']['input']>;
-  heading?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  authorId: Scalars['Int']['input'];
+  headerImageString: Scalars['String']['input'];
+  heading: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type CreatePostInput = {
@@ -56,9 +58,8 @@ export type CreatePostInput = {
 };
 
 export type CreateUserInput = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  password?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -75,6 +76,7 @@ export type Mutation = {
   updateCollection: Collection;
   updatePost: Post;
   updateUser: User;
+  upsertCollection: Collection;
 };
 
 
@@ -135,6 +137,11 @@ export type MutationUpdatePostArgs = {
 
 export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
+};
+
+
+export type MutationUpsertCollectionArgs = {
+  updateCollectionInput: UpdateCollectionInput;
 };
 
 export type Post = {
@@ -208,9 +215,11 @@ export type UpdateAuthInput = {
 };
 
 export type UpdateCollectionInput = {
-  heading?: InputMaybe<Scalars['String']['input']>;
+  authorId: Scalars['Int']['input'];
+  headerImageString: Scalars['String']['input'];
+  heading: Scalars['String']['input'];
   id: Scalars['Int']['input'];
-  title?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
 };
 
 export type UpdatePostInput = {
@@ -227,10 +236,10 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
-  email?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  password?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  password: Scalars['String']['output'];
   posts?: Maybe<Array<Maybe<Post>>>;
 };
 
@@ -239,35 +248,42 @@ export type CollectionByUserQueryVariables = Exact<{
 }>;
 
 
-export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, heading?: string | null, id: number, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null> };
+export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, heading: string, headerImageString: string, id: number, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null> };
 
 export type FindOneWithPostsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading?: string | null, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null };
+export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading: string, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null };
 
 export type CreateCollectionInputMutationVariables = Exact<{
   input: CreateCollectionInput;
 }>;
 
 
-export type CreateCollectionInputMutation = { __typename?: 'Mutation', createCollection: { __typename?: 'Collection', authorId: number, title: string, heading?: string | null } };
+export type CreateCollectionInputMutation = { __typename?: 'Mutation', createCollection: { __typename?: 'Collection', authorId: number, title: string, heading: string, headerImageString: string } };
+
+export type UpsertCollectionInputMutationVariables = Exact<{
+  input: UpdateCollectionInput;
+}>;
+
+
+export type UpsertCollectionInputMutation = { __typename?: 'Mutation', upsertCollection: { __typename?: 'Collection', id: number, authorId: number, title: string, headerImageString: string, heading: string } };
 
 export type UpdateCollectionInputMutationVariables = Exact<{
   input: UpdateCollectionInput;
 }>;
 
 
-export type UpdateCollectionInputMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'Collection', title: string, heading?: string | null } };
+export type UpdateCollectionInputMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'Collection', title: string, heading: string, headerImageString: string } };
 
 export type RemoveCollectionMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type RemoveCollectionMutation = { __typename?: 'Mutation', removeCollection?: { __typename?: 'Collection', id: number, title: string, heading?: string | null } | null };
+export type RemoveCollectionMutation = { __typename?: 'Mutation', removeCollection?: { __typename?: 'Collection', id: number, title: string, heading: string } | null };
 
 export type CreateAuthInputMutationVariables = Exact<{
   input: CreateAuthInput;
@@ -281,7 +297,7 @@ export type CreateUserInputMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserInputMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', name: string, email?: string | null, password?: string | null } };
+export type CreateUserInputMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, password: string } };
 
 export type CreatePostInputMutationVariables = Exact<{
   input: CreatePostInput;
@@ -295,7 +311,7 @@ export type FindOneQueryVariables = Exact<{
 }>;
 
 
-export type FindOneQuery = { __typename?: 'Query', post?: { __typename?: 'Post', title?: string | null, content?: any | null } | null };
+export type FindOneQuery = { __typename?: 'Query', post?: { __typename?: 'Post', title?: string | null, content?: any | null, collectionId?: number | null } | null };
 
 export type PostsInCollectionQueryVariables = Exact<{
   collectionId: Scalars['Int']['input'];
@@ -330,6 +346,7 @@ export const CollectionByUserDocument = gql`
   collectionByUser(authorId: $authorId) {
     title
     heading
+    headerImageString
     id
     posts {
       id
@@ -381,6 +398,7 @@ export const CreateCollectionInputDocument = gql`
     authorId
     title
     heading
+    headerImageString
   }
 }
     `;
@@ -395,11 +413,34 @@ export const CreateCollectionInputDocument = gql`
       super(apollo);
     }
   }
+export const UpsertCollectionInputDocument = gql`
+    mutation UpsertCollectionInput($input: UpdateCollectionInput!) {
+  upsertCollection(updateCollectionInput: $input) {
+    id
+    authorId
+    title
+    headerImageString
+    heading
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpsertCollectionInputGQL extends Apollo.Mutation<UpsertCollectionInputMutation, UpsertCollectionInputMutationVariables> {
+    document = UpsertCollectionInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const UpdateCollectionInputDocument = gql`
     mutation UpdateCollectionInput($input: UpdateCollectionInput!) {
   updateCollection(updateCollectionInput: $input) {
     title
     heading
+    headerImageString
   }
 }
     `;
@@ -455,7 +496,6 @@ export const CreateAuthInputDocument = gql`
 export const CreateUserInputDocument = gql`
     mutation CreateUserInput($input: CreateUserInput!) {
   createUser(createUserInput: $input) {
-    name
     email
     password
   }
@@ -496,6 +536,7 @@ export const FindOneDocument = gql`
   post(id: $id) {
     title
     content
+    collectionId
   }
 }
     `;

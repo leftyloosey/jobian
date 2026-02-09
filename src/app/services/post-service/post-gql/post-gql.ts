@@ -14,6 +14,7 @@ export const FIND_ONE_POST = gql`
     post(id: $id) {
       title
       content
+      collectionId
     }
   }
 `;

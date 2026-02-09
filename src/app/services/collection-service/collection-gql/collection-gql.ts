@@ -5,6 +5,7 @@ export const COLLECTIONS_BY_USER = gql`
     collectionByUser(authorId: $authorId) {
       title
       heading
+      headerImageString
       id
       posts {
         id
@@ -36,6 +37,19 @@ export const CREATE_COLLECTION = gql`
       authorId
       title
       heading
+      headerImageString
+    }
+  }
+`;
+
+export const UPSERT_COLLECTION = gql`
+  mutation UpsertCollectionInput($input: UpdateCollectionInput!) {
+    upsertCollection(updateCollectionInput: $input) {
+      id
+      authorId
+      title
+      headerImageString
+      heading
     }
   }
 `;
@@ -45,6 +59,7 @@ export const UPDATE_COLLECTION = gql`
     updateCollection(updateCollectionInput: $input) {
       title
       heading
+      headerImageString
     }
   }
 `;

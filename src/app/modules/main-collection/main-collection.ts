@@ -1,11 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
-// import { CollectionRow } from '../../shared/collection-row/collection-row';
-// import { Collection } from '../../utils/interfaces/NewCollection';
-import { Collection } from '../../../graphql/generated';
 import { CollectionService } from '../../services/collection-service/collection-service';
+import { CollectionsWithPartial } from '../../utils/types/collection-types';
+
 @Component({
   selector: 'app-main-collection',
   imports: [AsyncPipe],
@@ -13,22 +12,26 @@ import { CollectionService } from '../../services/collection-service/collection-
   styleUrl: './main-collection.scss',
 })
 export class MainCollection implements OnInit {
-  private route = inject(ActivatedRoute);
-  current = this.route.snapshot.routeConfig?.path;
+  protected loading = signal<boolean>(true);
+  protected error: any;
 
-  protected display$!: Observable<Collection[]>;
+  display$!: Observable<CollectionsWithPartial>;
 
-  constructor(private router: Router, private collection: CollectionService) {}
+  constructor(
+    private router: Router,
+    private collection: CollectionService,
+  ) {}
 
   ngOnInit() {
     this.display$ = this.collection.watchCollections().pipe(
       map((data) => {
-        return data.data?.collectionByUser as Collection[];
-      })
+        this.loading.set(data.loading);
+        return data.data?.collectionByUser;
+      }),
     );
   }
 
-  openCollection(title: string) {
-    this.router.navigate([`${title}`]);
+  openCollection(title: string | undefined): void {
+    if (title) this.router.navigate([`${title}`]);
   }
 }

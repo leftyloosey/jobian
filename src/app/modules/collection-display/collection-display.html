@@ -2,19 +2,8 @@
 
 <h2>{{ title }}</h2>
 
-<!-- @for (post of display; track post?.id;) { -->
 @for (post of posts; track post?.id;) {
 
-<p>{{ post?.title }}</p>
-}
-<!-- @if (titleMatch) {
-<h1>{{ title }}</h1>
-} -->
-<!-- @if (display$) { @for (post of display$| async; track post?.id;) {
+<p (click)="goToPost(post.id)">{{ post?.title }}</p>
 
-<p>{{ post?.title }}</p>
-} } @else {
-<p>penis</p>
-} @if (titleMatch) {
-<h1>{{ title }}</h1>
-} -->
+}

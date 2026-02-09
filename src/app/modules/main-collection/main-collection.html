@@ -1,6 +1,9 @@
 <!-- @if (this.display$ | async) { } -->
-@for (collection of this.display$| async; track collection.title;) {
+@if (loading()) {
+<div>Loading...</div>
+} @if (error) {
+<div>Error :{{ error }}</div>
+} @for (collection of this.display$| async; track collection?.title;) {
 
-<p (click)="openCollection(collection.title)">{{ collection.title }}</p>
+<p (click)="openCollection(collection?.title)">{{ collection?.title }}</p>
 }
-<h1>{{ current }}</h1>

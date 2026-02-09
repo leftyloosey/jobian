@@ -10,6 +10,7 @@ import { Admin } from './modules/admin/admin';
 import { TestQuill } from './shared/test-quill/test-quill';
 import { CollectionEdit } from './modules/collection-edit/collection-edit';
 import { CollectionDisplay } from './modules/collection-display/collection-display';
+import { PostDisplay } from './modules/post-display/post-display';
 import { Redirector } from './shared/redirector/redirector';
 import { LoginGuard } from './utils/login-guard/login-guard';
 import {
@@ -40,16 +41,21 @@ export const routes: Routes = [
     // resolve: [collectionsResolver],
     loadComponent: () =>
       import('./modules/main-collection/main-collection').then(
-        (load) => load.MainCollection
+        (load) => load.MainCollection,
       ),
   },
   {
-    path: 'editor/:update/:id',
+    path: 'editor/:update/:collectionid/:id',
     loadComponent: () =>
       import('./modules/editor/editor').then((load) => load.Editor),
   },
+  // {
+  //   path: 'test',
+  //   loadComponent: () =>
+  //     import('./shared/test-quill/test-quill').then((load) => load.TestQuill),
+  // },
   {
-    path: 'editor/:newid',
+    path: 'editor/:collectionid',
     loadComponent: () =>
       import('./modules/editor/editor').then((load) => load.Editor),
   },
@@ -73,7 +79,7 @@ export const routes: Routes = [
     path: 'admin/collection-edit/:id',
     loadComponent: () =>
       import('./modules/collection-edit/collection-edit').then(
-        (load) => load.CollectionEdit
+        (load) => load.CollectionEdit,
       ),
   },
   {
@@ -101,7 +107,14 @@ export const routes: Routes = [
     resolve: [postResolver],
     loadComponent: () =>
       import('./modules/collection-display/collection-display').then(
-        (load) => load.CollectionDisplay
+        (load) => load.CollectionDisplay,
+      ),
+  },
+  {
+    path: ':title/:post',
+    loadComponent: () =>
+      import('./modules/post-display/post-display').then(
+        (load) => load.PostDisplay,
       ),
   },
 ];

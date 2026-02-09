@@ -1,18 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import Quill from 'quill';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PostService } from '../../services/post-service/post-service';
-import { Observable, tap } from 'rxjs';
-import { ApolloClient, ObservableQuery } from '@apollo/client';
-import { AsyncPipe } from '@angular/common';
+import { Observable, switchMap, tap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FindOneQuery } from '../../../graphql/generated';
+import { EditorService } from '../../services/editor-service/editor-service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AsyncPipe } from '@angular/common';
+import { ApolloClient } from '@apollo/client';
+
+import Quill from 'quill';
 
 @Component({
   selector: 'app-editor',
@@ -21,74 +18,125 @@ import { FindOneQuery } from '../../../graphql/generated';
   styleUrl: './editor.scss',
 })
 export class Editor {
-  protected submit$!: Observable<ApolloClient.MutateResult<unknown>>;
-  protected delete$!: Observable<ApolloClient.MutateResult<unknown>>;
-  protected display$!: Observable<
-    ObservableQuery.Result<
-      FindOneQuery,
-      'empty' | 'complete' | 'streaming' | 'partial'
-    >
-  >;
-  protected postId: number = 0;
   protected form = new FormGroup({
     html: new FormControl(''),
     title: new FormControl(''),
   });
+
+  protected postId: number = 0;
+  protected collectionId: number = 0;
+
   private updateMode: boolean = false;
 
-  @ViewChild(QuillEditorComponent) quillEditorComponent!: QuillEditorComponent;
   quill!: Quill;
+
+  private destroyRef = inject(DestroyRef);
+
+  protected newPost!: Observable<ApolloClient.MutateResult<unknown>>;
+  protected updatePost!: Observable<ApolloClient.MutateResult<unknown>>;
+  protected watchPost!: Observable<ApolloClient.MutateResult<unknown>>;
+  protected deletePost!: Observable<ApolloClient.MutateResult<unknown>>;
+
   constructor(
-    private fb: FormBuilder,
+    private editor: EditorService,
     private post: PostService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
-    const updateId = this.route.snapshot.paramMap.get('id') ?? '';
-    const updateMode = this.route.snapshot.paramMap.get('update') ?? 'false';
-    const newId = this.route.snapshot.paramMap.get('newid') ?? '';
-    console.log(this.route.snapshot.paramMap);
-    console.log(updateId, newId, updateMode);
-    if (updateMode === 'update') {
-      this.updateMode = true;
-      this.postId = parseInt(updateId);
-      this.display$ = this.post.watchOnePost(this.postId).valueChanges.pipe(
-        tap((post) => {
-          // console.log(post.data?.post?.content);
-          const dataForPost = post.data?.post;
+    const collectionId = this.route.snapshot.paramMap.get('collectionid') ?? '';
+    if (collectionId) this.collectionId = parseInt(collectionId);
 
-          if (dataForPost) {
+    this.watchPost = editor.$watchOneObs.pipe(
+      takeUntilDestroyed(),
+      switchMap((postId) =>
+        this.post.watchOnePost(postId?.postId).valueChanges.pipe(
+          takeUntilDestroyed(this.destroyRef),
+          tap((post) => {
+            const dataForPost = post?.data?.post;
             console.log(dataForPost);
-            this.quill.setContents(dataForPost.content);
-            this.form.controls.title.setValue(dataForPost.title ?? '');
-          }
-        })
-      );
-    } else {
-      this.postId = parseInt(newId);
-    }
+
+            if (typeof dataForPost?.collectionId === 'number') {
+              this.collectionId = dataForPost?.collectionId;
+              this.quill.setContents(dataForPost?.content);
+              this.form.controls.title.setValue(dataForPost.title ?? '');
+            }
+          }),
+        ),
+      ),
+    );
+
+    this.newPost = editor.$newPostObs.pipe(
+      takeUntilDestroyed(),
+      switchMap((collection) =>
+        this.post.newPost(collection).pipe(tap((result) => result)),
+      ),
+    );
+
+    this.updatePost = editor.$updatePostObs.pipe(
+      takeUntilDestroyed(),
+      switchMap((collection) =>
+        this.post.updateOne(collection).pipe(tap((result) => result)),
+      ),
+    );
+
+    this.deletePost = editor.$deletePostObs.pipe(
+      takeUntilDestroyed(),
+      switchMap((deletePost) =>
+        this.post
+          .deletePost(deletePost.postId, deletePost.collectionId)
+          .pipe(tap((result) => result)),
+      ),
+    );
   }
 
-  saveChanges() {
+  createEditor(editor: Quill): void {
+    const editorCreated = new Promise((resolve, reject) => {
+      this.quill = editor;
+      resolve('editor created');
+      reject('did not create editor');
+    }).then(() => {
+      const updateId = this.route.snapshot.paramMap.get('id') ?? '';
+      const updateMode = this.route.snapshot.paramMap.get('update') ?? 'false';
+
+      if (updateMode === 'update') {
+        this.updateMode = true;
+        this.postId = parseInt(updateId);
+        this.editor.watchOne.next({ postId: this.postId });
+      }
+    });
+  }
+
+  saveChanges(): void {
     const title = this.form.get('title')?.value ?? 'no_title';
     const delta = this.quill.getContents();
+
     if (this.updateMode) {
-      this.submit$ = this.post.updateOne(title, delta.ops, this.postId);
+      this.editor.updatePost.next({
+        title,
+        content: delta.ops,
+        collectionId: this.collectionId,
+        id: this.postId,
+      });
     } else {
-      this.submit$ = this.post
-        .newPost(title, delta.ops, this.postId)
-        .pipe(tap((submit) => submit));
+      this.editor.newPost.next({
+        title,
+        content: delta.ops,
+        collectionId: this.collectionId,
+      });
     }
   }
 
-  deletePost() {
-    this.delete$ = this.post
-      .deletePost(this.postId)
-      .pipe(tap((deleted) => deleted));
-    this.router.navigate(['/editor']);
+  deleteThisPost(e: Event): void {
+    e.preventDefault();
+
+    this.editor.deletePost.next({
+      postId: this.postId,
+      collectionId: this.collectionId,
+    });
+    this.router.navigate(['/admin/collection-edit', this.collectionId]);
   }
 
-  created(editor: Quill) {
-    this.quill = editor;
+  backToCollectionEdit() {
+    this.router.navigate(['/admin/collection-edit', this.collectionId]);
   }
 }

@@ -11,7 +11,6 @@ export const GET_LOGIN_TOKEN = gql`
 export const CREATE_USER = gql`
   mutation CreateUserInput($input: CreateUserInput!) {
     createUser(createUserInput: $input) {
-      name
       email
       password
     }

@@ -23,6 +23,7 @@ Quill.register('modules/imageResize', ImageResize);
 import { routes } from './app.routes';
 import { LoadingService } from './services/loading-service/loading-service';
 import { LoadingInterceptor } from './utils/interceptors/loading-interceptor/loading-interceptor';
+import { loggingInterceptor } from './utils/interceptors/logging-interceptor/logging-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -50,8 +51,8 @@ export const appConfig: ApplicationConfig = {
       //   router.navigate(['/redirect', { redirectValue: error.url }]);
       // })
     ),
-    provideHttpClient(),
-    // provideHttpClient(withInterceptors([loggingInterceptor])),
+    // provideHttpClient(),
+    provideHttpClient(withInterceptors([loggingInterceptor])),
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       return {
