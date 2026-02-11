@@ -1,9 +1,12 @@
 <!-- @if (this.display$ | async) { } -->
 @if (loading()) {
-<div>Loading...</div>
-} @if (error) {
-<div>Error :{{ error }}</div>
-} @for (collection of this.display$| async; track collection?.title;) {
-
-<p (click)="openCollection(collection?.title)">{{ collection?.title }}</p>
+  <div>Loading...</div>
+}
+@if (error) {
+  <div>Error :{{ error }}</div>
+}
+@for (collection of this.display$ | async; track collection?.title) {
+  <a routerLink class="lank" (click)="openCollection(collection?.title)">
+    {{ collection?.title }}
+  </a>
 }

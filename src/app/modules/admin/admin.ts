@@ -2,22 +2,20 @@ import { Component, inject, signal } from '@angular/core';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CollectionAdminRow } from '../../shared/collection-admin-row/collection-admin-row';
-import { CreateCollectionDialog } from '../../shared/create-collection-dialog/create-collection-dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RemoveCollectionMutation } from '../../../graphql/generated';
 import { Apollo } from 'apollo-angular';
 import { CollectionService } from '../../services/collection-service/collection-service';
-// import {
-//   CollectionWithPartial,
-//   MaybeCollection,
-// } from '../../utils/interfaces/CollectionWithPartial';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminService } from '../../services/admin-service/admin-service';
 import {
   CollectionsWithPartial,
   MaybeCollection,
 } from '../../utils/types/collection-types';
+import { NameService } from '../../services/name-service/name-service';
+import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
+import { CreateCollectionDialog } from '../../shared/create-collection-dialog/create-collection-dialog';
 @Component({
   selector: 'app-admin',
   imports: [
@@ -26,6 +24,7 @@ import {
     MatDialogModule,
     AsyncPipe,
     CollectionAdminRow,
+    GraphqlSpinner,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
@@ -42,6 +41,7 @@ export class Admin {
   constructor(
     private collection: CollectionService,
     private admin: AdminService,
+    private name: NameService,
   ) {
     admin.upsertSubject
       .pipe(
@@ -117,5 +117,9 @@ export class Admin {
         this.upsertCollection(id, title, heading, headerImageString);
       }
     });
+  }
+
+  logout() {
+    this.name.logout();
   }
 }

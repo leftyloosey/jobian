@@ -11,14 +11,19 @@ import {
   RemovePostGQL,
   PostsInCollectionQuery,
   FindOneWithPostsDocument,
+  CollectionByUserDocument,
+  PostsInCollectionDocument,
+  FindOneDocument,
 } from '../../../graphql/generated';
 import { DeepPartial } from '@apollo/client/utilities';
+import { NameService } from '../name-service/name-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
   constructor(
+    private name: NameService,
     private posts: PostsInCollectionGQL,
     private findOne: FindOneGQL,
     private createPost: CreatePostInputGQL,
@@ -56,6 +61,10 @@ export class PostService {
           query: FindOneWithPostsDocument,
           variables: { id: input.collectionId },
         },
+        {
+          query: CollectionByUserDocument,
+          variables: { authorId: this.name.getUser() },
+        },
       ],
     });
   }
@@ -71,6 +80,18 @@ export class PostService {
         {
           query: FindOneWithPostsDocument,
           variables: { id: input2.collectionId },
+        },
+        {
+          query: FindOneDocument,
+          variables: { id },
+        },
+        {
+          query: PostsInCollectionDocument,
+          variables: { id: input2.collectionId },
+        },
+        {
+          query: CollectionByUserDocument,
+          variables: { authorId: this.name.getUser() },
         },
       ],
     });

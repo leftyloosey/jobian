@@ -4,13 +4,13 @@ import { Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CollectionService } from '../../services/collection-service/collection-service';
 import { PostsReturn } from '../../utils/types/post-types';
-import { FindOneWithPostsQuery } from '../../../graphql/generated';
-import { ApolloClient, ObservableQuery } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 import { CollectionWithPosts } from '../../utils/types/collection-types';
+import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
 
 @Component({
   selector: 'app-collection-edit',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, GraphqlSpinner],
   templateUrl: './collection-edit.html',
   styleUrl: './collection-edit.scss',
 })

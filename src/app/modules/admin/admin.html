@@ -1,6 +1,9 @@
+@if (this.delete$ | async) {}
+
 @if (loading()) {
-  <div>Loading...</div>
+  <app-graphql-spinner [loading]="loading()" />
 }
+
 @if (error) {
   <div>Error :{{ error }}</div>
 }
@@ -14,6 +17,5 @@
   </div>
 }
 
-@if (this.delete$ | async) {}
-
 <button (click)="openDialog(null)">create collection</button>
+<button (click)="logout()">logout</button>

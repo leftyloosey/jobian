@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PostService } from '../../services/post-service/post-service';
@@ -8,12 +8,18 @@ import { EditorService } from '../../services/editor-service/editor-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { ApolloClient } from '@apollo/client';
+import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
 
 import Quill from 'quill';
 
 @Component({
   selector: 'app-editor',
-  imports: [QuillEditorComponent, ReactiveFormsModule, AsyncPipe],
+  imports: [
+    QuillEditorComponent,
+    ReactiveFormsModule,
+    AsyncPipe,
+    GraphqlSpinner,
+  ],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
 })
@@ -25,6 +31,8 @@ export class Editor {
 
   protected postId: number = 0;
   protected collectionId: number = 0;
+
+  protected loading = signal<boolean>(false);
 
   private updateMode: boolean = false;
 
@@ -53,7 +61,8 @@ export class Editor {
           takeUntilDestroyed(this.destroyRef),
           tap((post) => {
             const dataForPost = post?.data?.post;
-            console.log(dataForPost);
+
+            this.loading.set(post.loading);
 
             if (typeof dataForPost?.collectionId === 'number') {
               this.collectionId = dataForPost?.collectionId;

@@ -1,13 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { CollectionService } from '../../services/collection-service/collection-service';
 import { CollectionsWithPartial } from '../../utils/types/collection-types';
 
 @Component({
   selector: 'app-main-collection',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, RouterLink],
   templateUrl: './main-collection.html',
   styleUrl: './main-collection.scss',
 })
@@ -32,6 +32,11 @@ export class MainCollection implements OnInit {
   }
 
   openCollection(title: string | undefined): void {
-    if (title) this.router.navigate([`${title}`]);
+    if (title) {
+      const dashedTitle = title.replaceAll(' ', '-');
+      console.log(dashedTitle);
+      this.router.navigate([`${dashedTitle}`]);
+      // this.router.navigate([`${title}`]);
+    }
   }
 }

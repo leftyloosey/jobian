@@ -1,9 +1,7 @@
-<!-- @if (display$ | async) {} -->
+<h2>{{ deDashedTitle }}</h2>
 
-<h2>{{ title }}</h2>
-
-@for (post of posts; track post?.id;) {
-
-<p (click)="goToPost(post.id)">{{ post?.title }}</p>
-
+@for (post of posts; track post?.id) {
+  <div class="col">
+    <a routerLink class="lank" (click)="goToPost(post.id)">{{ post?.title }}</a>
+  </div>
 }

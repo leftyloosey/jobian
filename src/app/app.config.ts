@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
       // BrowserModule,
       // AppRoutingModule,
       // RouterModule,
-      LoadingService
+      LoadingService,
     ),
     {
       provide: HTTP_INTERCEPTORS,
@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(
-      routes
+      routes,
       // withNavigationErrorHandler((error) => {
       //   sig.set(error.url);
       //   const router = inject(Router);
@@ -57,9 +57,7 @@ export const appConfig: ApplicationConfig = {
       const httpLink = inject(HttpLink);
       return {
         link: httpLink.create({ uri: environment.DB }),
-        // link: httpLink.create({ uri: 'http://localhost:3000/graphql' }),
         cache: new InMemoryCache(),
-        // other options...
       };
     }),
     provideQuillConfig({

@@ -28,7 +28,9 @@ export const collectionsResolver: ResolveFn<
 export const postResolver: ResolveFn<
   Apollo.QueryResult<PostsByCollectionTitleQuery>
 > = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  const collectionTitle: string = route.params['title'];
+  const dashed: string = route.params['title'];
+  // const collectionTitle: string = route.params['title'];
+  const collectionTitle = dashed.replaceAll('-', ' ');
   const posts = inject(PostsByCollectionTitleGQL);
   return posts
     .fetch({ variables: { collectionTitle } })

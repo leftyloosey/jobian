@@ -3,6 +3,10 @@
 @if (watchPost | async) {}
 @if (deletePost | async) {}
 
+@if (loading()) {
+  <app-graphql-spinner [loading]="loading()" />
+}
+
 <form [formGroup]="form" class="editor">
   <input type="text" formControlName="title" placeholder="title" />
   <quill-editor

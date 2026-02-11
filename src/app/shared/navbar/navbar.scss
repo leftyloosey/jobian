@@ -3,14 +3,24 @@
   justify-content: space-between;
   width: 100%;
 
-  &__title {
+  &__title-frame {
     display: flex;
   }
-  &__options {
+  &__title {
+    &--text {
+      text-decoration: none;
+      color: black;
+    }
+  }
+  &__options-frame {
     padding-left: 1rem;
     display: flex;
-    &__options--single {
-      padding-left: 1rem;
+  }
+  &__option {
+    padding-left: 1rem;
+    &--text {
+      text-decoration: none;
+      color: black;
     }
   }
 }
