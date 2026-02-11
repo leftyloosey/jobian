@@ -1,6 +1,5 @@
-<!-- @if (this.display$ | async) { } -->
 @if (loading()) {
-  <div>Loading...</div>
+  <app-graphql-spinner [loading]="loading()" />
 }
 @if (error) {
   <div>Error :{{ error }}</div>

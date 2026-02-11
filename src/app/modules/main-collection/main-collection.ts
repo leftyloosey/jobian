@@ -4,10 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { CollectionService } from '../../services/collection-service/collection-service';
 import { CollectionsWithPartial } from '../../utils/types/collection-types';
+import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
 
 @Component({
   selector: 'app-main-collection',
-  imports: [AsyncPipe, RouterLink],
+  imports: [AsyncPipe, RouterLink, GraphqlSpinner],
   templateUrl: './main-collection.html',
   styleUrl: './main-collection.scss',
 })

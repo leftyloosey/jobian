@@ -7,10 +7,11 @@ import { PostService } from '../../services/post-service/post-service';
 import { ActivatedRoute } from '@angular/router';
 import { ObservableQuery } from '@apollo/client';
 import { FindOneQuery } from '../../../graphql/generated';
+import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
 
 @Component({
   selector: 'app-post-display',
-  imports: [AsyncPipe, SanitizeHtmlPipe],
+  imports: [AsyncPipe, SanitizeHtmlPipe, GraphqlSpinner],
   templateUrl: './post-display.html',
   styleUrl: './post-display.scss',
 })
@@ -44,7 +45,7 @@ export class PostDisplay {
         // this.loading = result.loading;
         this.error = result.error;
         result;
-      })
+      }),
     );
   }
 
