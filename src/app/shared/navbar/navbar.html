@@ -1,6 +1,36 @@
 <section class="navbar">
   <div class="navbar__title-frame">
     <p class="navbar__title">
+      <a class="navbar__title--text" [routerLink]="home">
+        @if (heading$ | async) {
+          {{ blogTitle() }}
+        }
+      </a>
+    </p>
+  </div>
+  <div class="navbar__options-frame">
+    @for (member of members$ | async; track member?.id) {
+      <p class="navbar__option">
+        <a
+          class="navbar__option--text"
+          routerLink
+          (click)="openNavElement(member?.id)"
+        >
+          {{ member?.title }}</a
+        >
+      </p>
+    }
+
+    @if (loggedIn()) {
+      <p class="navbar__option">
+        <a class="navbar__option--text" [routerLink]="admin">Admin</a>
+      </p>
+    }
+  </div>
+</section>
+<!-- <section class="navbar">
+  <div class="navbar__title-frame">
+    <p class="navbar__title">
       <a class="navbar__title--text" [routerLink]="home">{{ title }}</a>
     </p>
   </div>
@@ -20,4 +50,4 @@
       </p>
     }
   </div>
-</section>
+</section> -->

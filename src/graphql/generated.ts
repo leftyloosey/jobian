@@ -51,6 +51,17 @@ export type CreateCollectionInput = {
   title: Scalars['String']['input'];
 };
 
+export type CreateNavHeadingInput = {
+  authorId: Scalars['Int']['input'];
+  blogTitle: Scalars['String']['input'];
+};
+
+export type CreateNavMemberInput = {
+  collectionId: Scalars['Int']['input'];
+  content: Scalars['JSON']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type CreatePostInput = {
   collectionId?: InputMaybe<Scalars['Int']['input']>;
   content?: InputMaybe<Scalars['JSON']['input']>;
@@ -59,6 +70,7 @@ export type CreatePostInput = {
 
 export type CreateUserInput = {
   email: Scalars['String']['input'];
+  owner: Scalars['Boolean']['input'];
   password: Scalars['String']['input'];
 };
 
@@ -66,17 +78,24 @@ export type Mutation = {
   __typename?: 'Mutation';
   createAuth: Token;
   createCollection: Collection;
+  createNavHeading: NavHeading;
+  createNavMember: NavMember;
   createPost: Post;
   createUser: User;
   removeAuth?: Maybe<Auth>;
   removeCollection?: Maybe<Collection>;
+  removeNavHeading?: Maybe<NavHeading>;
+  removeNavMember?: Maybe<NavMember>;
   removePost?: Maybe<Post>;
   removeUser?: Maybe<User>;
   updateAuth: Auth;
   updateCollection: Collection;
+  updateNavHeading: NavHeading;
+  updateNavMember: NavMember;
   updatePost: Post;
   updateUser: User;
   upsertCollection: Collection;
+  upsertNavHeading: NavHeading;
 };
 
 
@@ -87,6 +106,16 @@ export type MutationCreateAuthArgs = {
 
 export type MutationCreateCollectionArgs = {
   createCollectionInput: CreateCollectionInput;
+};
+
+
+export type MutationCreateNavHeadingArgs = {
+  createNavHeadingInput: CreateNavHeadingInput;
+};
+
+
+export type MutationCreateNavMemberArgs = {
+  createNavMemberInput: CreateNavMemberInput;
 };
 
 
@@ -106,6 +135,16 @@ export type MutationRemoveAuthArgs = {
 
 
 export type MutationRemoveCollectionArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveNavHeadingArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveNavMemberArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -130,6 +169,16 @@ export type MutationUpdateCollectionArgs = {
 };
 
 
+export type MutationUpdateNavHeadingArgs = {
+  updateNavHeadingInput: UpdateNavHeadingInput;
+};
+
+
+export type MutationUpdateNavMemberArgs = {
+  updateNavMemberInput: UpdateNavMemberInput;
+};
+
+
 export type MutationUpdatePostArgs = {
   updatePostInput: UpdatePostInput;
 };
@@ -142,6 +191,29 @@ export type MutationUpdateUserArgs = {
 
 export type MutationUpsertCollectionArgs = {
   updateCollectionInput: UpdateCollectionInput;
+};
+
+
+export type MutationUpsertNavHeadingArgs = {
+  updateNavHeadingInput: UpdateNavHeadingInput;
+};
+
+export type NavHeading = {
+  __typename?: 'NavHeading';
+  author: User;
+  authorId: Scalars['Int']['output'];
+  blogTitle: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  navRow: Array<Maybe<NavMember>>;
+};
+
+export type NavMember = {
+  __typename?: 'NavMember';
+  collectionId: Scalars['Int']['output'];
+  content: Scalars['JSON']['output'];
+  id: Scalars['Int']['output'];
+  navHeading: NavHeading;
+  title: Scalars['String']['output'];
 };
 
 export type Post = {
@@ -161,7 +233,13 @@ export type Query = {
   collectionByUser: Array<Maybe<Collection>>;
   collectionWithPosts?: Maybe<Collection>;
   collections: Array<Maybe<Collection>>;
+  collectionsOfOwner: User;
   collectionsWithPosts: Array<Maybe<Collection>>;
+  navHeading?: Maybe<NavHeading>;
+  navHeadings?: Maybe<Array<Maybe<NavHeading>>>;
+  navMember?: Maybe<NavMember>;
+  navMembers?: Maybe<Array<Maybe<NavMember>>>;
+  navMembersInHeading?: Maybe<Array<Maybe<NavMember>>>;
   post?: Maybe<Post>;
   posts: Array<Maybe<Post>>;
   postsByCollectionTitle: Array<Maybe<Post>>;
@@ -183,6 +261,21 @@ export type QueryCollectionByUserArgs = {
 
 export type QueryCollectionWithPostsArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type QueryNavHeadingArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryNavMemberArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryNavMembersInHeadingArgs = {
+  collectionId: Scalars['Int']['input'];
 };
 
 
@@ -222,6 +315,18 @@ export type UpdateCollectionInput = {
   title: Scalars['String']['input'];
 };
 
+export type UpdateNavHeadingInput = {
+  authorId: Scalars['Int']['input'];
+  blogTitle: Scalars['String']['input'];
+  id: Scalars['Int']['input'];
+};
+
+export type UpdateNavMemberInput = {
+  content: Scalars['JSON']['input'];
+  id: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type UpdatePostInput = {
   content?: InputMaybe<Scalars['JSON']['input']>;
   id: Scalars['Int']['input'];
@@ -236,9 +341,11 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
+  collections?: Maybe<Array<Maybe<Collection>>>;
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  owner: Scalars['Boolean']['output'];
   password: Scalars['String']['output'];
   posts?: Maybe<Array<Maybe<Post>>>;
 };
@@ -297,7 +404,80 @@ export type CreateUserInputMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserInputMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, password: string } };
+export type CreateUserInputMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, password: string, owner: boolean } };
+
+export type AllNavHeadingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllNavHeadingsQuery = { __typename?: 'Query', navHeadings?: Array<{ __typename?: 'NavHeading', id: number, blogTitle: string, authorId: number } | null> | null };
+
+export type CreateNavHeadingMutationVariables = Exact<{
+  input: CreateNavHeadingInput;
+}>;
+
+
+export type CreateNavHeadingMutation = { __typename?: 'Mutation', createNavHeading: { __typename?: 'NavHeading', blogTitle: string, authorId: number, id: number } };
+
+export type UpsertNavHeadingMutationVariables = Exact<{
+  input: UpdateNavHeadingInput;
+}>;
+
+
+export type UpsertNavHeadingMutation = { __typename?: 'Mutation', upsertNavHeading: { __typename?: 'NavHeading', blogTitle: string, authorId: number, id: number } };
+
+export type UpdateNavHeadingMutationVariables = Exact<{
+  input: UpdateNavHeadingInput;
+}>;
+
+
+export type UpdateNavHeadingMutation = { __typename?: 'Mutation', updateNavHeading: { __typename?: 'NavHeading', blogTitle: string, id: number } };
+
+export type RemoveNavHeadingMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type RemoveNavHeadingMutation = { __typename?: 'Mutation', removeNavHeading?: { __typename?: 'NavHeading', id: number, blogTitle: string } | null };
+
+export type AllNavMembersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllNavMembersQuery = { __typename?: 'Query', navMembers?: Array<{ __typename?: 'NavMember', id: number, title: string, content: any } | null> | null };
+
+export type FindOneNavQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type FindOneNavQuery = { __typename?: 'Query', navMember?: { __typename?: 'NavMember', title: string, content: any, collectionId: number } | null };
+
+export type NavMembersByHeadingQueryVariables = Exact<{
+  collectionId: Scalars['Int']['input'];
+}>;
+
+
+export type NavMembersByHeadingQuery = { __typename?: 'Query', navMembersInHeading?: Array<{ __typename?: 'NavMember', title: string, content: any, id: number } | null> | null };
+
+export type CreateNavMemberMutationVariables = Exact<{
+  input: CreateNavMemberInput;
+}>;
+
+
+export type CreateNavMemberMutation = { __typename?: 'Mutation', createNavMember: { __typename?: 'NavMember', id: number, collectionId: number, title: string, content: any } };
+
+export type UpdateNavMemberMutationVariables = Exact<{
+  input: UpdateNavMemberInput;
+}>;
+
+
+export type UpdateNavMemberMutation = { __typename?: 'Mutation', updateNavMember: { __typename?: 'NavMember', id: number, title: string, content: any } };
+
+export type RemoveNavMemberMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type RemoveNavMemberMutation = { __typename?: 'Mutation', removeNavMember?: { __typename?: 'NavMember', id: number, title: string, content: any } | null };
 
 export type CreatePostInputMutationVariables = Exact<{
   input: CreatePostInput;
@@ -340,6 +520,11 @@ export type RemovePostMutationVariables = Exact<{
 
 
 export type RemovePostMutation = { __typename?: 'Mutation', removePost?: { __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null };
+
+export type CollectionsOfOwnerQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsOfOwnerQuery = { __typename?: 'Query', collectionsOfOwner: { __typename?: 'User', collections?: Array<{ __typename?: 'Collection', id: number, heading: string, title: string, headerImageString: string } | null> | null } };
 
 export const CollectionByUserDocument = gql`
     query CollectionByUser($authorId: Int!) {
@@ -498,6 +683,7 @@ export const CreateUserInputDocument = gql`
   createUser(createUserInput: $input) {
     email
     password
+    owner
   }
 }
     `;
@@ -507,6 +693,225 @@ export const CreateUserInputDocument = gql`
   })
   export class CreateUserInputGQL extends Apollo.Mutation<CreateUserInputMutation, CreateUserInputMutationVariables> {
     document = CreateUserInputDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AllNavHeadingsDocument = gql`
+    query AllNavHeadings {
+  navHeadings {
+    id
+    blogTitle
+    authorId
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AllNavHeadingsGQL extends Apollo.Query<AllNavHeadingsQuery, AllNavHeadingsQueryVariables> {
+    document = AllNavHeadingsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateNavHeadingDocument = gql`
+    mutation CreateNavHeading($input: CreateNavHeadingInput!) {
+  createNavHeading(createNavHeadingInput: $input) {
+    blogTitle
+    authorId
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateNavHeadingGQL extends Apollo.Mutation<CreateNavHeadingMutation, CreateNavHeadingMutationVariables> {
+    document = CreateNavHeadingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpsertNavHeadingDocument = gql`
+    mutation UpsertNavHeading($input: UpdateNavHeadingInput!) {
+  upsertNavHeading(updateNavHeadingInput: $input) {
+    blogTitle
+    authorId
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpsertNavHeadingGQL extends Apollo.Mutation<UpsertNavHeadingMutation, UpsertNavHeadingMutationVariables> {
+    document = UpsertNavHeadingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateNavHeadingDocument = gql`
+    mutation UpdateNavHeading($input: UpdateNavHeadingInput!) {
+  updateNavHeading(updateNavHeadingInput: $input) {
+    blogTitle
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateNavHeadingGQL extends Apollo.Mutation<UpdateNavHeadingMutation, UpdateNavHeadingMutationVariables> {
+    document = UpdateNavHeadingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveNavHeadingDocument = gql`
+    mutation RemoveNavHeading($id: Int!) {
+  removeNavHeading(id: $id) {
+    id
+    blogTitle
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveNavHeadingGQL extends Apollo.Mutation<RemoveNavHeadingMutation, RemoveNavHeadingMutationVariables> {
+    document = RemoveNavHeadingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AllNavMembersDocument = gql`
+    query AllNavMembers {
+  navMembers {
+    id
+    title
+    content
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AllNavMembersGQL extends Apollo.Query<AllNavMembersQuery, AllNavMembersQueryVariables> {
+    document = AllNavMembersDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const FindOneNavDocument = gql`
+    query findOneNav($id: Int!) {
+  navMember(id: $id) {
+    title
+    content
+    collectionId
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FindOneNavGQL extends Apollo.Query<FindOneNavQuery, FindOneNavQueryVariables> {
+    document = FindOneNavDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const NavMembersByHeadingDocument = gql`
+    query NavMembersByHeading($collectionId: Int!) {
+  navMembersInHeading(collectionId: $collectionId) {
+    title
+    content
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class NavMembersByHeadingGQL extends Apollo.Query<NavMembersByHeadingQuery, NavMembersByHeadingQueryVariables> {
+    document = NavMembersByHeadingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateNavMemberDocument = gql`
+    mutation CreateNavMember($input: CreateNavMemberInput!) {
+  createNavMember(createNavMemberInput: $input) {
+    id
+    collectionId
+    title
+    content
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateNavMemberGQL extends Apollo.Mutation<CreateNavMemberMutation, CreateNavMemberMutationVariables> {
+    document = CreateNavMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateNavMemberDocument = gql`
+    mutation UpdateNavMember($input: UpdateNavMemberInput!) {
+  updateNavMember(updateNavMemberInput: $input) {
+    id
+    title
+    content
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateNavMemberGQL extends Apollo.Mutation<UpdateNavMemberMutation, UpdateNavMemberMutationVariables> {
+    document = UpdateNavMemberDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveNavMemberDocument = gql`
+    mutation RemoveNavMember($id: Int!) {
+  removeNavMember(id: $id) {
+    id
+    title
+    content
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveNavMemberGQL extends Apollo.Mutation<RemoveNavMemberMutation, RemoveNavMemberMutationVariables> {
+    document = RemoveNavMemberDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -626,6 +1031,29 @@ export const RemovePostDocument = gql`
   })
   export class RemovePostGQL extends Apollo.Mutation<RemovePostMutation, RemovePostMutationVariables> {
     document = RemovePostDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CollectionsOfOwnerDocument = gql`
+    query CollectionsOfOwner {
+  collectionsOfOwner {
+    collections {
+      id
+      heading
+      title
+      headerImageString
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CollectionsOfOwnerGQL extends Apollo.Query<CollectionsOfOwnerQuery, CollectionsOfOwnerQueryVariables> {
+    document = CollectionsOfOwnerDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

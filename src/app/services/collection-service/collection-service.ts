@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, Query } from 'apollo-angular';
 import { UpsertCollection } from '../../utils/interfaces/UpsertCollection';
-import { map, Observable, Subject } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { NameService } from '../name-service/name-service';
 import {
   CreateCollectionInput,

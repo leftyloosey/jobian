@@ -13,6 +13,7 @@ export const CREATE_USER = gql`
     createUser(createUserInput: $input) {
       email
       password
+      owner
     }
   }
 `;

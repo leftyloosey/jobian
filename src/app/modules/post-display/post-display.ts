@@ -3,15 +3,28 @@ import { Observable, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import { SanitizeHtmlPipe } from '../../utils/pipes/sanitize-html-pipe';
-import { PostService } from '../../services/post-service/post-service';
 import { ActivatedRoute } from '@angular/router';
 import { ObservableQuery } from '@apollo/client';
 import { FindOneQuery } from '../../../graphql/generated';
 import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
+import { DISPLAYBASE_TOKEN } from '../../utils/tokens/DisplayBaseToken';
+import { GostService } from '../../services/gost-service/gost-service';
+import {
+  editRetornable,
+  returnEditQuery,
+  returnspEditQuery,
+} from '../../utils/functions/editorReturn';
 
 @Component({
   selector: 'app-post-display',
   imports: [AsyncPipe, SanitizeHtmlPipe, GraphqlSpinner],
+  providers: [
+    {
+      provide: GostService,
+      useExisting: DISPLAYBASE_TOKEN,
+      deps: [DISPLAYBASE_TOKEN],
+    },
+  ],
   templateUrl: './post-display.html',
   styleUrl: './post-display.scss',
 })
@@ -28,21 +41,19 @@ export class PostDisplay {
 
   html: string = '';
 
-  // posts: any[] = [];
   protected loading = signal<boolean>(true);
-  // loading = true;
   error: any;
 
-  constructor(private readonly post: PostService) {
-    this.display$ = post.watchOnePost(this.id).valueChanges.pipe(
+  constructor(private readonly post: GostService) {
+    this.display$ = post.watchOnePost(this.post.postId).valueChanges.pipe(
       tap((result) => {
-        const item = result.data;
-        if (item?.post?.content) {
-          const ops = item?.post?.content;
-          this.displayFromDelta(ops);
-        }
+        const item = returnEditQuery(result);
+        this.displayFromDelta(item?.content);
+        // if (item?.post?.content) {
+        //   const ops = item?.post?.content;
+        //   this.displayFromDelta(ops);
+        // }
         this.loading.set(result.loading);
-        // this.loading = result.loading;
         this.error = result.error;
         result;
       }),

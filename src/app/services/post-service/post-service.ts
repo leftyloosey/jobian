@@ -1,35 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import { NewPost } from '../../utils/interfaces/NewPost';
-import { UpdatePost } from '../../utils/interfaces/UpdatePost';
-import { map, Observable } from 'rxjs';
+import { DeepPartial } from '@apollo/client/utilities';
+import { QueryRef, Apollo } from 'apollo-angular';
+import { Observable, map } from 'rxjs';
 import {
-  FindOneGQL,
   PostsInCollectionGQL,
+  FindOneGQL,
   CreatePostInputGQL,
   UpdatePostInputGQL,
   RemovePostGQL,
   PostsInCollectionQuery,
+  FindOneQuery,
+  Exact,
+  Scalars,
   FindOneWithPostsDocument,
   CollectionByUserDocument,
-  PostsInCollectionDocument,
   FindOneDocument,
+  PostsInCollectionDocument,
 } from '../../../graphql/generated';
-import { DeepPartial } from '@apollo/client/utilities';
+import { NewPost } from '../../utils/interfaces/NewPost';
+import {
+  PostServiceBase,
+  PostServiceBaseClass,
+} from '../../utils/interfaces/PostServiceBase';
+import { UpdatePost } from '../../utils/interfaces/UpdatePost';
 import { NameService } from '../name-service/name-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PostService {
+export class PostService extends PostServiceBaseClass {
+  override collectionId: number = 0;
+  override postId: number = 0;
+  override updateMode: boolean = false;
   constructor(
-    private name: NameService,
-    private posts: PostsInCollectionGQL,
-    private findOne: FindOneGQL,
-    private createPost: CreatePostInputGQL,
-    private updatePost: UpdatePostInputGQL,
-    private removePost: RemovePostGQL,
-  ) {}
+    override name: NameService,
+    override posts: PostsInCollectionGQL,
+    override findOne: FindOneGQL,
+    override createPost: CreatePostInputGQL,
+    override updatePost: UpdatePostInputGQL,
+    override removePost: RemovePostGQL,
+  ) {
+    super();
+  }
 
   public postsInCollection(
     collectionId: number,
@@ -49,7 +61,12 @@ export class PostService {
       );
   }
 
-  public watchOnePost(id: number) {
+  public watchOnePost(id: number): QueryRef<
+    FindOneQuery,
+    Exact<{
+      id: Scalars['Int']['input'];
+    }>
+  > {
     return this.findOne.watch({ variables: { id } });
   }
 

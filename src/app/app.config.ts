@@ -57,6 +57,8 @@ export const appConfig: ApplicationConfig = {
       const httpLink = inject(HttpLink);
       return {
         link: httpLink.create({ uri: environment.DB }),
+        defaultOptions: { query: { fetchPolicy: 'network-only' } },
+        // defaultOptions: { watchQuery: { fetchPolicy: 'network-only' } },
         cache: new InMemoryCache(),
       };
     }),

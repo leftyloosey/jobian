@@ -16,11 +16,11 @@ export class CollectionDisplay {
   constructor(private router: Router) {
     this.deDashedTitle = this.title.replaceAll('-', ' ');
     const url: string = this.route.snapshot.url.join('');
-    this.posts = this.route.snapshot.data[0].data.postsByCollectionTitle;
 
-    if (!this.posts.length) this.router.navigate(['/main']);
+    this.posts = this.route.snapshot.data[0].data.postsByCollectionTitle;
   }
+
   protected goToPost(id: number) {
-    this.router.navigate([this.title, id]);
+    this.router.navigate(['display', this.title, 'post', id]);
   }
 }

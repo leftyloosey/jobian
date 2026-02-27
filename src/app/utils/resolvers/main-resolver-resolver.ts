@@ -32,6 +32,7 @@ export const postResolver: ResolveFn<
   // const collectionTitle: string = route.params['title'];
   const collectionTitle = dashed.replaceAll('-', ' ');
   const posts = inject(PostsByCollectionTitleGQL);
+
   return posts
     .fetch({ variables: { collectionTitle } })
     .pipe(map((stuff) => stuff));

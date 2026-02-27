@@ -1,40 +1,22 @@
 import { Routes } from '@angular/router';
 import { MainCollection } from './modules/main-collection/main-collection';
 import { Login } from './modules/login/login';
-import { About } from './modules/about/about';
-import { Team } from './modules/team/team';
-import { Contact } from './modules/contact/contact';
 import { Editor } from './modules/editor/editor';
 import { Admin } from './modules/admin/admin';
-// import { TestGql } from './shared/test-gql/test-gql';
-import { TestQuill } from './shared/test-quill/test-quill';
 import { CollectionEdit } from './modules/collection-edit/collection-edit';
 import { CollectionDisplay } from './modules/collection-display/collection-display';
 import { PostDisplay } from './modules/post-display/post-display';
 import { Redirector } from './shared/redirector/redirector';
 import { LoginGuard } from './utils/login-guard/login-guard';
-import {
-  collectionsResolver,
-  postResolver,
-} from './utils/resolvers/main-resolver-resolver';
-// import { redirectorResolver } from './services/redirect-service/redirector-resolver';
+import { postResolver } from './utils/resolvers/main-resolver-resolver';
+import { EditorContainer } from './modules/editor-container/editor-container';
+import { PostDisplayContainer } from './modules/post-display-container/post-display-container';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'main',
     pathMatch: 'full',
-  },
-  // {
-  //   path: '**',
-  //   resolve: [redirectorResolver],
-  //   redirectTo: 'redirect',
-  //   pathMatch: 'full',
-  // },
-  {
-    path: 'redirect',
-    // resolve: [redirectorResolver],
-    component: Redirector,
   },
   {
     path: 'main',
@@ -45,33 +27,8 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'editor/:update/:collectionid/:id',
-    loadComponent: () =>
-      import('./modules/editor/editor').then((load) => load.Editor),
-  },
-  // {
-  //   path: 'test',
-  //   loadComponent: () =>
-  //     import('./shared/test-quill/test-quill').then((load) => load.TestQuill),
-  // },
-  {
-    path: 'editor/:collectionid',
-    loadComponent: () =>
-      import('./modules/editor/editor').then((load) => load.Editor),
-  },
-  {
     path: 'admin',
     canActivate: [LoginGuard],
-    // children: [
-    //   {
-    //     path: 'collection-edit',
-    //     component: CollectionEdit,
-    //     loadComponent: () =>
-    //       import('./modules/collection-edit/collection-edit').then(
-    //         (load) => load.CollectionEdit
-    //       ),
-    //   },
-    // ],
     loadComponent: () =>
       import('./modules/admin/admin').then((load) => load.Admin),
   },
@@ -83,24 +40,29 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'contact',
-    loadComponent: () =>
-      import('./modules/contact/contact').then((load) => load.Contact),
-  },
-  {
-    path: 'about',
-    loadComponent: () =>
-      import('./modules/about/about').then((load) => load.About),
-  },
-  {
-    path: 'team',
-    loadComponent: () =>
-      import('./modules/team/team').then((load) => load.Team),
-  },
-  {
     path: 'login',
     loadComponent: () =>
       import('./modules/login/login').then((load) => load.Login),
+  },
+  {
+    path: 'redirect',
+    component: Redirector,
+  },
+  {
+    // path: 'display',
+    path: 'display/:title/:displaymode/:postid',
+    loadComponent: () =>
+      import('./modules/post-display-container/post-display-container').then(
+        (load) => load.PostDisplayContainer,
+      ),
+  },
+  {
+    // path: 'display',
+    path: 'display/:displaymode/:postid',
+    loadComponent: () =>
+      import('./modules/post-display-container/post-display-container').then(
+        (load) => load.PostDisplayContainer,
+      ),
   },
   {
     path: ':title',
@@ -111,10 +73,94 @@ export const routes: Routes = [
       ),
   },
   {
-    path: ':title/:post',
+    path: 'edit/:editormode/:collectionid',
     loadComponent: () =>
-      import('./modules/post-display/post-display').then(
-        (load) => load.PostDisplay,
+      import('./modules/editor-container/editor-container').then(
+        (load) => load.EditorContainer,
       ),
   },
+
+  {
+    path: 'edit/:editormode/:update/:collectionid/:postid',
+    loadComponent: () =>
+      import('./modules/editor-container/editor-container').then(
+        (load) => load.EditorContainer,
+      ),
+  },
+  {
+    path: 'login/:owner',
+    loadComponent: () =>
+      import('./modules/login/login').then((load) => load.Login),
+  },
 ];
+// export const routes: Routes = [
+//   // {
+//   //   path: '',
+//   //   redirectTo: 'main',
+//   //   pathMatch: 'full',
+//   // },
+//   {
+//     path: 'main',
+//     // resolve: [collectionsResolver],
+//     loadComponent: () =>
+//       import('./modules/main-collection/main-collection').then(
+//         (load) => load.MainCollection,
+//       ),
+//   },
+//   {
+//     path: 'admin',
+//     canActivate: [LoginGuard],
+//     loadComponent: () =>
+//       import('./modules/admin/admin').then((load) => load.Admin),
+//   },
+//   {
+//     path: 'admin/collection-edit/:id',
+//     loadComponent: () =>
+//       import('./modules/collection-edit/collection-edit').then(
+//         (load) => load.CollectionEdit,
+//       ),
+//   },
+//   {
+//     path: 'login',
+//     loadComponent: () =>
+//       import('./modules/login/login').then((load) => load.Login),
+//   },
+//   {
+//     path: 'redirect',
+//     component: Redirector,
+//   },
+//   {
+//     path: ':title',
+//     resolve: [postResolver],
+//     loadComponent: () =>
+//       import('./modules/collection-display/collection-display').then(
+//         (load) => load.CollectionDisplay,
+//       ),
+//   },
+//   {
+//     path: 'edit/:editormode/:collectionid',
+//     loadComponent: () =>
+//       import('./modules/editor-container/editor-container').then(
+//         (load) => load.EditorContainer,
+//       ),
+//   },
+//   {
+//     path: ':title/:displaymode/:post',
+//     loadComponent: () =>
+//       import('./modules/post-display-container/post-display-container').then(
+//         (load) => load.PostDisplayContainer,
+//       ),
+//   },
+//   {
+//     path: 'edit/:editormode/:update/:collectionid/:postid',
+//     loadComponent: () =>
+//       import('./modules/editor-container/editor-container').then(
+//         (load) => load.EditorContainer,
+//       ),
+//   },
+//   {
+//     path: 'login/:owner',
+//     loadComponent: () =>
+//       import('./modules/login/login').then((load) => load.Login),
+//   },
+// ];

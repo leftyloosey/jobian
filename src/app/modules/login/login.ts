@@ -13,11 +13,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Observable, tap } from 'rxjs';
 import { LoginService } from '../../services/login-service/login-service';
-import { LoginAttempt } from '../../utils/interfaces/LoginAttempt';
+import {
+  CreateAttempt,
+  LoginAttempt,
+} from '../../utils/interfaces/LoginAttempt';
 import { Apollo } from 'apollo-angular';
 import { Router } from '@angular/router';
 import { NameService } from '../../services/name-service/name-service';
-
+import { ActivatedRoute } from '@angular/router';
+import { ConfirmLoginService } from '../../services/confirm-login-service/confirm-login-service';
 @Component({
   selector: 'app-login',
   imports: [
@@ -39,6 +43,8 @@ export class Login {
   protected login$!: Observable<Apollo.MutateResult<unknown>>;
   protected create$!: Observable<Apollo.MutateResult<unknown>>;
 
+  private owner: boolean = false;
+
   protected loginForm = new FormGroup({
     email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
@@ -55,7 +61,16 @@ export class Login {
     private login: LoginService,
     private router: Router,
     private name: NameService,
+    private confirm: ConfirmLoginService,
+    private route: ActivatedRoute,
   ) {
+    this.route.paramMap.subscribe((params) => {
+      const owner = params.get('owner');
+      if (owner && typeof owner === 'string' && owner === 'owner') {
+        this.owner = true;
+      }
+    });
+
     this.isValid$ = this.loginForm.statusChanges.pipe(
       tap((changes) => {
         if (changes === 'VALID') this.formInvalid = false;
@@ -74,6 +89,7 @@ export class Login {
           const { token } = result.data.createAuth;
           console.log(token);
           this.name.extractIdFromResult(token);
+          this.confirm.loggedSubject.next(false);
           this.router.navigate(['/admin']);
         }),
       );
@@ -82,9 +98,11 @@ export class Login {
   protected submitForCreate(): void {
     let passwordConfirm = prompt('Confirm password:');
     const { email, password } = this.loginForm.value;
-    let attempt: LoginAttempt;
+    let attempt: CreateAttempt;
     if (email && password && passwordConfirm === password) {
-      attempt = { email, password };
+      const owner = this.owner;
+      console.log('owner!', owner);
+      attempt = { email, password, owner };
       this.create$ = this.login.attemptCreate(attempt).pipe(
         tap((create) => {
           window.alert('User created.');

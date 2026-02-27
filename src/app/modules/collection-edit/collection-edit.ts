@@ -51,11 +51,12 @@ export class CollectionEdit {
   }
 
   protected newPost(): void {
-    this.router.navigate(['/editor/', this.collectionId]);
+    this.router.navigate(['edit/', 'post', this.collectionId]);
   }
   protected editPost(id: number): void {
-    this.router.navigate(['/editor/', 'update', this.collectionId, id]);
+    this.router.navigate(['edit/post/', 'update', this.collectionId, id]);
   }
+
   protected backToAdmin() {
     this.router.navigate(['/admin']);
   }

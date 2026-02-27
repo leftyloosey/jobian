@@ -16,8 +16,7 @@ export class Redirector implements AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      console.log(sig());
       this.router.navigate([`${sig()}`]);
-    }, 2000);
+    }, 0);
   }
 }

@@ -3,14 +3,17 @@ import { QuillEditorComponent } from 'ngx-quill';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PostService } from '../../services/post-service/post-service';
 import { Observable, switchMap, tap } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { EditorService } from '../../services/editor-service/editor-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { ApolloClient } from '@apollo/client';
 import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
+import { POSTBASE_TOKEN } from '../../utils/tokens/PostBaseToken';
+import { returnEditQuery } from '../../utils/functions/editorReturn';
 
 import Quill from 'quill';
+import { GostService } from '../../services/gost-service/gost-service';
 
 @Component({
   selector: 'app-editor',
@@ -22,6 +25,13 @@ import Quill from 'quill';
   ],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
+  providers: [
+    {
+      provide: GostService,
+      useExisting: POSTBASE_TOKEN,
+      deps: [POSTBASE_TOKEN],
+    },
+  ],
 })
 export class Editor {
   protected form = new FormGroup({
@@ -29,12 +39,11 @@ export class Editor {
     title: new FormControl(''),
   });
 
+  private updateMode: boolean = false;
   protected postId: number = 0;
   protected collectionId: number = 0;
 
   protected loading = signal<boolean>(false);
-
-  private updateMode: boolean = false;
 
   quill!: Quill;
 
@@ -47,28 +56,22 @@ export class Editor {
 
   constructor(
     private editor: EditorService,
-    private post: PostService,
-    private route: ActivatedRoute,
+    private post: GostService,
     private router: Router,
   ) {
-    const collectionId = this.route.snapshot.paramMap.get('collectionid') ?? '';
-    if (collectionId) this.collectionId = parseInt(collectionId);
-
+    this.collectionId = this.post.collectionId;
+    this.postId = this.post.postId;
+    this.updateMode = this.post.updateMode;
     this.watchPost = editor.$watchOneObs.pipe(
       takeUntilDestroyed(),
       switchMap((postId) =>
         this.post.watchOnePost(postId?.postId).valueChanges.pipe(
           takeUntilDestroyed(this.destroyRef),
           tap((post) => {
-            const dataForPost = post?.data?.post;
-
+            const data = returnEditQuery(post);
             this.loading.set(post.loading);
-
-            if (typeof dataForPost?.collectionId === 'number') {
-              this.collectionId = dataForPost?.collectionId;
-              this.quill.setContents(dataForPost?.content);
-              this.form.controls.title.setValue(dataForPost.title ?? '');
-            }
+            this.quill.setContents(data?.content ?? []);
+            this.form.controls.title.setValue(data?.title ?? '');
           }),
         ),
       ),
@@ -104,12 +107,7 @@ export class Editor {
       resolve('editor created');
       reject('did not create editor');
     }).then(() => {
-      const updateId = this.route.snapshot.paramMap.get('id') ?? '';
-      const updateMode = this.route.snapshot.paramMap.get('update') ?? 'false';
-
-      if (updateMode === 'update') {
-        this.updateMode = true;
-        this.postId = parseInt(updateId);
+      if (this.updateMode) {
         this.editor.watchOne.next({ postId: this.postId });
       }
     });
@@ -135,14 +133,16 @@ export class Editor {
     }
   }
 
-  deleteThisPost(e: Event): void {
-    e.preventDefault();
-
+  deleteThisPost(): void {
+    // deleteThisPost(e: Event): void {
+    // e.preventDefault();
     this.editor.deletePost.next({
       postId: this.postId,
       collectionId: this.collectionId,
     });
-    this.router.navigate(['/admin/collection-edit', this.collectionId]);
+
+    // this.router.navigate(['admin']);
+    // this.router.navigate(['/admin/collection-edit', this.collectionId]);
   }
 
   backToCollectionEdit() {

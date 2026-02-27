@@ -9,7 +9,6 @@ export const LoginGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const cookie = inject(CookieService);
   const logged = cookie.check(loggedIn);
-
   if (!logged) {
     const loginPath = router.parseUrl('/login');
     return new RedirectCommand(loginPath, {

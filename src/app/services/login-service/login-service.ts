@@ -11,11 +11,7 @@ import { CREATE_USER } from './login-gql/login-gql';
   providedIn: 'root',
 })
 export class LoginService {
-  constructor(
-    private cookie: CookieService,
-    private name: NameService,
-    private apollo: Apollo,
-  ) {}
+  constructor(private apollo: Apollo) {}
 
   public attemptLogin = (
     submit: LoginAttempt,

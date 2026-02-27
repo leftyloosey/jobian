@@ -16,6 +16,14 @@ import {
 import { NameService } from '../../services/name-service/name-service';
 import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
 import { CreateCollectionDialog } from '../../shared/create-collection-dialog/create-collection-dialog';
+import { RostService } from '../../services/rost-service/rost-service';
+import {
+  AllQuery,
+  editRetornable,
+  editReturnable,
+  returnEditQuery,
+  returnspEditQuery,
+} from '../../utils/functions/editorReturn';
 @Component({
   selector: 'app-admin',
   imports: [
@@ -31,6 +39,10 @@ import { CreateCollectionDialog } from '../../shared/create-collection-dialog/cr
 })
 export class Admin {
   public collection$!: Observable<CollectionsWithPartial>;
+  public kollection: editRetornable[] = [];
+  public kollection$!: Observable<[editRetornable] | undefined | null>;
+
+  jsone$!: Observable<editReturnable | null>;
 
   protected delete$!: Observable<Apollo.MutateResult<RemoveCollectionMutation>>;
   protected loading = signal<boolean>(true);
@@ -42,14 +54,18 @@ export class Admin {
     private collection: CollectionService,
     private admin: AdminService,
     private name: NameService,
+    private gost: RostService,
   ) {
     admin.upsertSubject
       .pipe(
         takeUntilDestroyed(),
         switchMap((collection) =>
-          this.collection
-            .upsertCollection(collection.upsertCollection)
-            .pipe(tap((result) => result)),
+          this.collection.upsertCollection(collection.upsertCollection).pipe(
+            tap((result) => {
+              if (result.loading) this.loading.set(result.loading);
+              result;
+            }),
+          ),
         ),
       )
       .subscribe();
@@ -57,11 +73,13 @@ export class Admin {
     admin.deleteSubject
       .pipe(
         takeUntilDestroyed(),
-        tap((yo) => console.log(yo)),
         switchMap((collection) =>
-          this.collection
-            .deleteCollection(collection.collectionId)
-            .pipe(tap((result) => result)),
+          this.collection.deleteCollection(collection.collectionId).pipe(
+            tap((result) => {
+              if (result.loading) this.loading.set(result.loading);
+              result;
+            }),
+          ),
         ),
       )
       .subscribe();
@@ -72,6 +90,22 @@ export class Admin {
       map((data) => {
         this.loading.set(data.loading);
         return data.data?.collectionByUser;
+      }),
+    );
+    this.kollection$ = this.gost.postsInCollection(1).pipe(
+      map((stuff) => {
+        console.log('poosts', stuff);
+        const dato = returnspEditQuery<typeof stuff, AllQuery>(stuff);
+        console.log(dato);
+        if (dato) this.kollection = dato;
+        return dato;
+      }),
+    );
+    this.jsone$ = this.gost.watchOnePost(148).valueChanges.pipe(
+      map((post) => {
+        const data = returnEditQuery(post);
+        this.loading.set(post.loading);
+        return data;
       }),
     );
   }

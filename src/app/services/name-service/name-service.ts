@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { jwtDecode } from 'jwt-decode';
 import { ExtendedPayload } from '../../utils/interfaces/ExtendedPayload';
 import { Router } from '@angular/router';
+import { ConfirmLoginService } from '../confirm-login-service/confirm-login-service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,21 +15,23 @@ export class NameService {
 
   constructor(
     private cookie: CookieService,
+    private confirm: ConfirmLoginService,
     private router: Router,
   ) {
+    // confirm.loggedSubject.next(false);
     if (this.checkLogin()) {
       const id = this.extractIdFromCookie();
       this.setUser(id);
       this.loggedIn.set(true);
-    } else {
-      this.router.navigate(['/login']);
     }
-    console.log(this.loggedIn());
   }
   public getUser(): number {
     return this.userId;
   }
-  public setUser(receivedId: number): void {
+  private setUser(receivedId: number): void {
+    this.userId = receivedId;
+  }
+  public getOwner(receivedId: number): void {
     this.userId = receivedId;
   }
 
@@ -41,7 +44,7 @@ export class NameService {
     this.setUser(id);
   }
 
-  public extractIdFromCookie(): number {
+  private extractIdFromCookie(): number {
     const cookie = this.cookie.get(loggedIn);
 
     const decoded: ExtendedPayload = jwtDecode(cookie);
@@ -49,15 +52,16 @@ export class NameService {
     return id;
   }
 
-  public checkLogin(): boolean {
+  private checkLogin(): boolean {
     if (this.cookie.check(loggedIn)) return true;
     return false;
   }
 
   public logout() {
-    this.cookie.deleteAll();
+    this.cookie.deleteAll('/');
+    this.cookie.deleteAll('/login');
     this.loggedIn.set(false);
-    // this.gotCookie.set(false);
-    this.router.navigate(['/home']);
+    this.confirm.loggedSubject.next(false);
+    this.router.navigate(['/main']);
   }
 }
