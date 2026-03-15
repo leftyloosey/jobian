@@ -2,7 +2,7 @@ import { Component, computed, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { POSTBASE_TOKEN } from '../../utils/tokens/PostBaseToken';
 import { EditorContainerService } from '../../services/editor-container-service/editor-container-service';
-import { Editor } from '../editor/editor';
+import { Editor } from '../../shared/editor/editor';
 import { NameService } from '../../services/name-service/name-service';
 
 @Component({

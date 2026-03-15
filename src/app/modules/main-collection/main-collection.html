@@ -5,7 +5,7 @@
   <div>Error :{{ error }}</div>
 }
 @for (collection of this.display$ | async; track collection?.title) {
-  <a routerLink class="lank" (click)="openCollection(collection?.title)">
+  <a routerLink class="lank" (click)="openCollection(collection?.urlTitle)">
     {{ collection?.title }}
   </a>
 }

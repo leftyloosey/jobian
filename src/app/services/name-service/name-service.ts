@@ -11,6 +11,7 @@ import { ConfirmLoginService } from '../confirm-login-service/confirm-login-serv
 })
 export class NameService {
   public userId: number = 0;
+  public NAV_NUMBER = 1;
   public loggedIn = signal<boolean>(false);
 
   constructor(

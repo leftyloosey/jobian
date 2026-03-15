@@ -1,6 +1,5 @@
 import { ObservableQuery } from '@apollo/client';
 import {
-  AllNavMembersQuery,
   FindOneNavQuery,
   FindOneQuery,
   NavMembersByHeadingQuery,
@@ -20,19 +19,11 @@ export interface editRetornable {
   title: string;
   id: number;
 }
-// export type editRetornable = {
-//   __typename: string;
-//   content: [];
-//   title: string;
-//   id: number;
-// } | null;
 
 export type NavOrPost = FindOneQuery extends FindOneNavQuery
   ? FindOneQuery
   : FindOneNavQuery;
 
-// export type slavOrPost<T, K> = T extends K ? T : K;
-// type slavOrPost<T, K> = NonNullable<T> | NonNullable<K>;
 type slavOrPost<T, K> = NonNullable<T> | NonNullable<DeepPartial<T>> | K;
 
 export function returnEditQuery(
@@ -50,22 +41,8 @@ export function returnEditQuery(
     return null;
   }
 }
-// export function returnEditQuery(
-//   post: ObservableQuery.Result<any, any>,
-//   // post: ObservableQuery.Result<any, any>,
-// ): editReturnable | null {
-//   {
-//     const data: NavOrPost = post.data;
-//     let t: keyof NavOrPost;
 
-//     for (t in data) {
-//       if (data) {
-//         return data[t] as editReturnable;
-//       }
-//     }
-//     return null;
-//   }
-// }
+type hoshy<T, K> = NonNullable<T> | NonNullable<DeepPartial<T>> | K;
 
 export type AllQuery = NavMembersByHeadingQuery | PostsInCollectionQuery;
 
@@ -82,17 +59,56 @@ export function returnspEditQuery<T, K>(post: T | DeepPartial<T> | undefined) {
   }
   return null;
 }
-// export function returnspEditQuery<T>(post: T | DeepPartial<T> | undefined) {
-//   type AllQuery = NavMembersByHeadingQuery | PostsInCollectionQuery;
-//   type extractedQuery = Extract<AllQuery, T>;
+export function genericTestor<T, K>(
+  post: T | DeepPartial<T> | undefined,
+): typeof post {
+  type extractedQuery = Extract<K, T>;
+  if (post) {
+    const data: hoshy<T, extractedQuery> = post;
+    let t: keyof typeof data;
 
-//   if (post) {
-//     const data: slavOrPost<T, extractedQuery> = post;
-//     let t: keyof typeof data;
+    for (t in data) {
+      console.log('datat', data[t]);
 
-//     for (t in data) {
-//       return data[t] as [editRetornable];
-//     }
-//   }
-//   return null;
-// }
+      return data[t] as hoshy<T, extractedQuery>;
+    }
+  }
+  return post as extractedQuery;
+}
+
+export function extractArray<T>(post: T | DeepPartial<T> | undefined) {
+  type hoshy<T> = NonNullable<T> | NonNullable<DeepPartial<T>>;
+
+  let gorm;
+  if (post) {
+    const data: typeof post = post;
+    gorm = goDown<hoshy<T>>(data);
+  }
+
+  return gorm;
+}
+
+function goDown<T>(data: T) {
+  if (data) {
+    let t: keyof typeof data;
+
+    for (t in data) {
+      if (Array.isArray(data[t])) {
+        return data[t];
+      } else {
+        if (typeof data[t] === 'object') {
+          const horb = data[t];
+          if (horb) {
+            let shlo: keyof typeof horb;
+            for (shlo in horb) {
+              if (Array.isArray(horb[shlo])) {
+                return horb[shlo];
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return data;
+}

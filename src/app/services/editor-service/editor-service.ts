@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Op } from 'quill';
 import { Subject } from 'rxjs';
 import { NewPost } from '../../utils/interfaces/NewPost';
 import { UpdatePost } from '../../utils/interfaces/UpdatePost';

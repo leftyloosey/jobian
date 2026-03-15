@@ -1,7 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NameService } from '../../services/name-service/name-service';
-import { PostDisplay } from '../post-display/post-display';
+import { PostDisplay } from '../../shared/post-display/post-display';
 import { PostDisplayService } from '../../services/post-display-service/post-display-service';
 import { DISPLAYBASE_TOKEN } from '../../utils/tokens/DisplayBaseToken';
 

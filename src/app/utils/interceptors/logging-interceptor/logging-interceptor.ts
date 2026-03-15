@@ -11,7 +11,7 @@ import { poopState } from '../../global-signals/global-signals';
 
 export function loggingInterceptor(
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
   const hoo = inject(Location);
   hoo.subscribe((eve) => {
@@ -23,10 +23,8 @@ export function loggingInterceptor(
   return next(req).pipe(
     tap((event) => {
       if (event.type === HttpEventType.Response) {
-        // console.log('event:', event);
-        // console.log('req:', req);
         console.log(req.url, 'returned a response with status', event.status);
       }
-    })
+    }),
   );
 }

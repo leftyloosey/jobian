@@ -9,7 +9,7 @@
 
 @for (post of posts; track post?.id) {
   <div>
-    {{ post?.id }} | {{ post?.title }}
+    {{ post?.title }}
     <button (click)="editPost(post?.id ?? 0)">edit</button>
   </div>
 }

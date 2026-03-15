@@ -37,6 +37,7 @@ export type Collection = {
   posts?: Maybe<Array<Maybe<Post>>>;
   timestamp: Scalars['Date']['output'];
   title: Scalars['String']['output'];
+  urlTitle: Scalars['String']['output'];
 };
 
 export type CreateAuthInput = {
@@ -49,6 +50,7 @@ export type CreateCollectionInput = {
   headerImageString: Scalars['String']['input'];
   heading: Scalars['String']['input'];
   title: Scalars['String']['input'];
+  urlTitle: Scalars['String']['input'];
 };
 
 export type CreateNavHeadingInput = {
@@ -313,6 +315,7 @@ export type UpdateCollectionInput = {
   heading: Scalars['String']['input'];
   id: Scalars['Int']['input'];
   title: Scalars['String']['input'];
+  urlTitle: Scalars['String']['input'];
 };
 
 export type UpdateNavHeadingInput = {
@@ -355,35 +358,35 @@ export type CollectionByUserQueryVariables = Exact<{
 }>;
 
 
-export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, heading: string, headerImageString: string, id: number, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null> };
+export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, urlTitle: string, heading: string, headerImageString: string, id: number, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null> };
 
 export type FindOneWithPostsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading: string, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null };
+export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading: string, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null, timestamp?: any | null } | null> | null } | null };
 
 export type CreateCollectionInputMutationVariables = Exact<{
   input: CreateCollectionInput;
 }>;
 
 
-export type CreateCollectionInputMutation = { __typename?: 'Mutation', createCollection: { __typename?: 'Collection', authorId: number, title: string, heading: string, headerImageString: string } };
+export type CreateCollectionInputMutation = { __typename?: 'Mutation', createCollection: { __typename?: 'Collection', authorId: number, title: string, urlTitle: string, heading: string, headerImageString: string } };
 
 export type UpsertCollectionInputMutationVariables = Exact<{
   input: UpdateCollectionInput;
 }>;
 
 
-export type UpsertCollectionInputMutation = { __typename?: 'Mutation', upsertCollection: { __typename?: 'Collection', id: number, authorId: number, title: string, headerImageString: string, heading: string } };
+export type UpsertCollectionInputMutation = { __typename?: 'Mutation', upsertCollection: { __typename?: 'Collection', id: number, authorId: number, title: string, urlTitle: string, headerImageString: string, heading: string } };
 
 export type UpdateCollectionInputMutationVariables = Exact<{
   input: UpdateCollectionInput;
 }>;
 
 
-export type UpdateCollectionInputMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'Collection', title: string, heading: string, headerImageString: string } };
+export type UpdateCollectionInputMutation = { __typename?: 'Mutation', updateCollection: { __typename?: 'Collection', title: string, urlTitle: string, heading: string, headerImageString: string } };
 
 export type RemoveCollectionMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -524,12 +527,18 @@ export type RemovePostMutation = { __typename?: 'Mutation', removePost?: { __typ
 export type CollectionsOfOwnerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsOfOwnerQuery = { __typename?: 'Query', collectionsOfOwner: { __typename?: 'User', collections?: Array<{ __typename?: 'Collection', id: number, heading: string, title: string, headerImageString: string } | null> | null } };
+export type CollectionsOfOwnerQuery = { __typename?: 'Query', collectionsOfOwner: { __typename?: 'User', collections?: Array<{ __typename?: 'Collection', id: number, heading: string, title: string, urlTitle: string, headerImageString: string } | null> | null } };
+
+export type CollectionsOfOwnerTitleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsOfOwnerTitleQuery = { __typename?: 'Query', collectionsOfOwner: { __typename?: 'User', collections?: Array<{ __typename?: 'Collection', id: number, title: string, urlTitle: string } | null> | null } };
 
 export const CollectionByUserDocument = gql`
     query CollectionByUser($authorId: Int!) {
   collectionByUser(authorId: $authorId) {
     title
+    urlTitle
     heading
     headerImageString
     id
@@ -562,6 +571,7 @@ export const FindOneWithPostsDocument = gql`
       id
       title
       content
+      timestamp
     }
   }
 }
@@ -582,6 +592,7 @@ export const CreateCollectionInputDocument = gql`
   createCollection(createCollectionInput: $input) {
     authorId
     title
+    urlTitle
     heading
     headerImageString
   }
@@ -604,6 +615,7 @@ export const UpsertCollectionInputDocument = gql`
     id
     authorId
     title
+    urlTitle
     headerImageString
     heading
   }
@@ -624,6 +636,7 @@ export const UpdateCollectionInputDocument = gql`
     mutation UpdateCollectionInput($input: UpdateCollectionInput!) {
   updateCollection(updateCollectionInput: $input) {
     title
+    urlTitle
     heading
     headerImageString
   }
@@ -1043,6 +1056,7 @@ export const CollectionsOfOwnerDocument = gql`
       id
       heading
       title
+      urlTitle
       headerImageString
     }
   }
@@ -1054,6 +1068,28 @@ export const CollectionsOfOwnerDocument = gql`
   })
   export class CollectionsOfOwnerGQL extends Apollo.Query<CollectionsOfOwnerQuery, CollectionsOfOwnerQueryVariables> {
     document = CollectionsOfOwnerDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CollectionsOfOwnerTitleDocument = gql`
+    query CollectionsOfOwnerTitle {
+  collectionsOfOwner {
+    collections {
+      id
+      title
+      urlTitle
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CollectionsOfOwnerTitleGQL extends Apollo.Query<CollectionsOfOwnerTitleQuery, CollectionsOfOwnerTitleQueryVariables> {
+    document = CollectionsOfOwnerTitleDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

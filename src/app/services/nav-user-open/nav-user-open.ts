@@ -8,8 +8,6 @@ import { Router } from '@angular/router';
 export class NavUserOpen implements NavElementBase {
   router = inject(Router);
   openNavElement(postId: number) {
-    console.log(postId);
-    console.log('user open');
     this.router.navigate(['display/', 'nav', postId]);
   }
 }

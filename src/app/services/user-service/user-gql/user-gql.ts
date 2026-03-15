@@ -7,7 +7,19 @@ export const COLLECTIONS_OF_OWNER = gql`
         id
         heading
         title
+        urlTitle
         headerImageString
+      }
+    }
+  }
+`;
+export const COLLECTIONS_OWNER_TITLES_ONLY = gql`
+  query CollectionsOfOwnerTitle {
+    collectionsOfOwner {
+      collections {
+        id
+        title
+        urlTitle
       }
     }
   }

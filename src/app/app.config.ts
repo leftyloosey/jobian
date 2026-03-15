@@ -5,7 +5,7 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, RouteReuseStrategy } from '@angular/router';
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import {
@@ -13,7 +13,7 @@ import {
   provideHttpClient,
   withInterceptors,
 } from '@angular/common/http';
-import { InMemoryCache } from '@apollo/client';
+import { ApolloLink, InMemoryCache } from '@apollo/client';
 import { provideQuillConfig } from 'ngx-quill/config';
 import ImageResize from '@mgreminger/quill-image-resize-module';
 import Quill from 'quill';
@@ -24,44 +24,45 @@ import { routes } from './app.routes';
 import { LoadingService } from './services/loading-service/loading-service';
 import { LoadingInterceptor } from './utils/interceptors/loading-interceptor/loading-interceptor';
 import { loggingInterceptor } from './utils/interceptors/logging-interceptor/logging-interceptor';
+import { CustomRouteReuseStrategy } from './utils/strategies/CustomRouteReuse';
+import { loadingLink } from './utils/apollo-links/loading-link';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    importProvidersFrom(
-      // BrowserModule,
-      // AppRoutingModule,
-      // RouterModule,
-      LoadingService,
-    ),
+    importProvidersFrom(LoadingService),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true,
     },
-    // provideAppInitializer(() => {
-    //   const config = inject(ConfigService);
-    // }),
+    {
+      provide: RouteReuseStrategy,
+      useClass: CustomRouteReuseStrategy,
+    },
+
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideRouter(
-      routes,
-      // withNavigationErrorHandler((error) => {
-      //   sig.set(error.url);
-      //   const router = inject(Router);
-      //   router.navigate(['/redirect', { redirectValue: error.url }]);
-      // })
-    ),
-    // provideHttpClient(),
+    provideRouter(routes),
+
     provideHttpClient(withInterceptors([loggingInterceptor])),
     provideApollo(() => {
       const httpLink = inject(HttpLink);
+      const link = ApolloLink.from([
+        loadingLink,
+        httpLink.create({ uri: environment.DB }),
+      ]);
       return {
-        link: httpLink.create({ uri: environment.DB }),
-        defaultOptions: { query: { fetchPolicy: 'network-only' } },
-        // defaultOptions: { watchQuery: { fetchPolicy: 'network-only' } },
+        link,
+        // link: httpLink.create({ uri: environment.DB }),
         cache: new InMemoryCache(),
       };
     }),
+    // const httpLink = inject(HttpLink);
+    // return {
+    //   link: httpLink.create({ uri: environment.DB }),
+    //   cache: new InMemoryCache(),
+    // };
+    // }),
     provideQuillConfig({
       modules: {
         imageResize: {},

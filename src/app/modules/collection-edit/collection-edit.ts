@@ -7,6 +7,7 @@ import { PostsReturn } from '../../utils/types/post-types';
 import { ApolloClient } from '@apollo/client';
 import { CollectionWithPosts } from '../../utils/types/collection-types';
 import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
+import { sortPostsByDate } from '../../utils/functions/sort-posts';
 
 @Component({
   selector: 'app-collection-edit',
@@ -45,6 +46,7 @@ export class CollectionEdit {
               collection.data?.collectionWithPosts?.heading ?? '',
             );
             this.posts = collection.data?.collectionWithPosts.posts;
+            if (this.posts) this.posts = sortPostsByDate(this.posts);
           }
         }),
       );

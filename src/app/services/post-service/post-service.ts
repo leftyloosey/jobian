@@ -1,53 +1,75 @@
 import { Injectable } from '@angular/core';
-import { DeepPartial } from '@apollo/client/utilities';
-import { QueryRef, Apollo } from 'apollo-angular';
-import { Observable, map } from 'rxjs';
+import { PostServiceBaseClass } from '../../utils/interfaces/PostServiceBase';
 import {
-  PostsInCollectionGQL,
-  FindOneGQL,
-  CreatePostInputGQL,
-  UpdatePostInputGQL,
-  RemovePostGQL,
-  PostsInCollectionQuery,
-  FindOneQuery,
-  Exact,
-  Scalars,
-  FindOneWithPostsDocument,
   CollectionByUserDocument,
+  CreatePostInputGQL,
+  Exact,
   FindOneDocument,
-  PostsInCollectionDocument,
+  FindOneGQL,
+  FindOneQuery,
+  FindOneWithPostsDocument,
+  PostsInCollectionGQL,
+  PostsInCollectionQuery,
+  RemovePostGQL,
+  Scalars,
+  UpdatePostInputGQL,
 } from '../../../graphql/generated';
-import { NewPost } from '../../utils/interfaces/NewPost';
-import {
-  PostServiceBase,
-  PostServiceBaseClass,
-} from '../../utils/interfaces/PostServiceBase';
-import { UpdatePost } from '../../utils/interfaces/UpdatePost';
+import { Apollo, QueryRef } from 'apollo-angular';
+import { map, Observable } from 'rxjs';
 import { NameService } from '../name-service/name-service';
+import { DeepPartial } from '@apollo/client/utilities';
+import { NewPost } from '../../utils/interfaces/NewPost';
+import { UpdatePost } from '../../utils/interfaces/UpdatePost';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PostService extends PostServiceBaseClass {
+export class PostService extends PostServiceBaseClass<
+  PostsInCollectionQuery,
+  PostsInCollectionGQL,
+  FindOneQuery,
+  FindOneGQL,
+  CreatePostInputGQL,
+  UpdatePostInputGQL,
+  RemovePostGQL
+> {
+  override posts: typeof this.postsGql;
+  override findOne: typeof this.findOneGql;
+  override createPost: typeof this.createGql;
+  override updatePost: typeof this.updateGql;
+  override removePost: typeof this.removeGql;
+
+  constructor(
+    private nam1: NameService,
+    private router1: Router,
+    private postsGql: PostsInCollectionGQL,
+    private findOneGql: FindOneGQL,
+    private createGql: CreatePostInputGQL,
+    private updateGql: UpdatePostInputGQL,
+    private removeGql: RemovePostGQL,
+  ) {
+    super();
+    this.name = nam1;
+    this.router = router1;
+    this.posts = postsGql;
+    this.findOne = findOneGql;
+    this.createPost = createGql;
+    this.updatePost = updateGql;
+    this.removePost = removeGql;
+  }
+  override name: NameService;
+  override router: Router;
   override collectionId: number = 0;
   override postId: number = 0;
   override updateMode: boolean = false;
-  constructor(
-    override name: NameService,
-    override posts: PostsInCollectionGQL,
-    override findOne: FindOneGQL,
-    override createPost: CreatePostInputGQL,
-    override updatePost: UpdatePostInputGQL,
-    override removePost: RemovePostGQL,
-  ) {
-    super();
-  }
 
-  public postsInCollection(
+  override postsInCollection(
     collectionId: number,
   ): Observable<
     PostsInCollectionQuery | DeepPartial<PostsInCollectionQuery> | undefined
   > {
+    this.collectionId = collectionId;
     return this.posts
       .watch({
         variables: {
@@ -61,12 +83,9 @@ export class PostService extends PostServiceBaseClass {
       );
   }
 
-  public watchOnePost(id: number): QueryRef<
-    FindOneQuery,
-    Exact<{
-      id: Scalars['Int']['input'];
-    }>
-  > {
+  override watchOnePost(
+    id: number,
+  ): QueryRef<FindOneQuery, Exact<{ id: Scalars['Int']['input'] }>> {
     return this.findOne.watch({ variables: { id } });
   }
 
@@ -94,18 +113,18 @@ export class PostService extends PostServiceBaseClass {
     return this.updatePost.mutate({
       variables: { input },
       refetchQueries: [
-        {
-          query: FindOneWithPostsDocument,
-          variables: { id: input2.collectionId },
-        },
+        // {
+        //   query: FindOneWithPostsDocument,
+        //   variables: { id: input2.collectionId },
+        // },
         {
           query: FindOneDocument,
           variables: { id },
         },
-        {
-          query: PostsInCollectionDocument,
-          variables: { id: input2.collectionId },
-        },
+        // {
+        //   query: PostsInCollectionDocument,
+        //   variables: { id: input2.collectionId },
+        // },
         {
           query: CollectionByUserDocument,
           variables: { authorId: this.name.getUser() },
@@ -127,5 +146,8 @@ export class PostService extends PostServiceBaseClass {
         },
       ],
     });
+  }
+  public backToMenu(): void {
+    this.router.navigate(['/admin/collection-edit', this.collectionId]);
   }
 }

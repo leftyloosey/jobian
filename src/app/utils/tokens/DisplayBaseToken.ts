@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
-import { GostService } from '../../services/gost-service/gost-service';
+import { PostService } from '../../services/post-service/post-service';
 
-export const DISPLAYBASE_TOKEN = new InjectionToken<GostService>(
+export const DISPLAYBASE_TOKEN = new InjectionToken<PostService>(
   // export const POSTBASE_TOKEN = new InjectionToken<PostService>(
   'display base token',
 );

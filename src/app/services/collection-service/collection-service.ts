@@ -10,7 +10,6 @@ import {
   RemoveCollectionGQL,
   RemoveCollectionMutation,
   CreateCollectionInputMutation,
-  CollectionByUserGQL,
   FindOneWithPostsGQL,
   Exact,
   FindOneWithPostsQuery,
@@ -20,6 +19,7 @@ import {
   UpdateCollectionInput,
   UpsertCollectionInputGQL,
   UpsertCollectionInputMutation,
+  CollectionByUserGQL,
 } from '../../../graphql/generated';
 
 @Injectable({
@@ -29,6 +29,7 @@ export class CollectionService {
   constructor(
     private name: NameService,
     private getCollections: CollectionByUserGQL,
+    // private getCollectionsTitle: CollectionsOfOwnerTitleGQL,
     private findOne: FindOneWithPostsGQL,
     private updateOne: UpdateCollectionInputGQL,
     private newCollection: CreateCollectionInputGQL,
@@ -62,11 +63,13 @@ export class CollectionService {
 
   public createCollection(
     title: string,
+    urlTitle: string,
     heading: string,
     headerImageString: string,
   ): Observable<Apollo.MutateResult<CreateCollectionInputMutation>> {
     const input: CreateCollectionInput = {
       authorId: this.name.getUser(),
+      urlTitle,
       title,
       heading,
       headerImageString,

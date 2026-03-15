@@ -4,12 +4,13 @@ import type {
   ResolveFn,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
-import { CollectionService } from '../../services/collection-service/collection-service';
-import { firstValueFrom, map, tap } from 'rxjs';
+import { Apollo } from 'apollo-angular';
+import { map } from 'rxjs';
 import {
   CollectionByUserGQL,
   CollectionByUserQuery,
+  CollectionsOfOwnerTitleGQL,
+  CollectionsOfOwnerTitleQuery,
   PostsByCollectionTitleGQL,
   PostsByCollectionTitleQuery,
 } from '../../../graphql/generated';
@@ -25,14 +26,21 @@ export const collectionsResolver: ResolveFn<
     .pipe(map((stuff) => stuff));
 };
 
+export const collectionTitleResolver: ResolveFn<
+  Apollo.QueryResult<CollectionsOfOwnerTitleQuery>
+> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const collections = inject(CollectionsOfOwnerTitleGQL);
+
+  return collections.fetch().pipe(map((collections) => collections));
+};
+
 export const postResolver: ResolveFn<
   Apollo.QueryResult<PostsByCollectionTitleQuery>
 > = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  const dashed: string = route.params['title'];
-  // const collectionTitle: string = route.params['title'];
-  const collectionTitle = dashed.replaceAll('-', ' ');
-  const posts = inject(PostsByCollectionTitleGQL);
+  const urlTitle: string = route.params['title'];
+  const collectionTitle = urlTitle;
 
+  const posts = inject(PostsByCollectionTitleGQL);
   return posts
     .fetch({ variables: { collectionTitle } })
     .pipe(map((stuff) => stuff));

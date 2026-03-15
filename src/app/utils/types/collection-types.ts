@@ -69,6 +69,30 @@ export type CollectionsWithPartial =
     )[]
   | undefined;
 
+export type CollectionsOfOwnerReturn =
+  | ({
+      __typename?: 'Collection' | undefined;
+      id: number;
+      heading: string;
+      title: string;
+      urlTitle: string;
+      headerImageString: string;
+    } | null)[]
+  | (
+      | DeepPartial<{
+          __typename?: 'Collection';
+          id: number;
+          heading: string;
+          title: string;
+          urlTitle: string;
+          headerImageString: string;
+        }>
+      | null
+      | undefined
+    )[]
+  | null
+  | undefined;
+
 export type MaybeCollection =
   | Collection
   | DeepPartial<Collection>

@@ -1,4 +1,4 @@
-import { Delta, Op } from 'quill';
+import { Op } from 'quill';
 export interface UpdatePost {
   title: string;
   content: Op[];

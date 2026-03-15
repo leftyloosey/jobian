@@ -1,14 +1,17 @@
 import { Routes } from '@angular/router';
 import { MainCollection } from './modules/main-collection/main-collection';
 import { Login } from './modules/login/login';
-import { Editor } from './modules/editor/editor';
+import { Editor } from './shared/editor/editor';
 import { Admin } from './modules/admin/admin';
 import { CollectionEdit } from './modules/collection-edit/collection-edit';
 import { CollectionDisplay } from './modules/collection-display/collection-display';
-import { PostDisplay } from './modules/post-display/post-display';
+import { PostDisplay } from './shared/post-display/post-display';
 import { Redirector } from './shared/redirector/redirector';
 import { LoginGuard } from './utils/login-guard/login-guard';
-import { postResolver } from './utils/resolvers/main-resolver-resolver';
+import {
+  collectionTitleResolver,
+  postResolver,
+} from './utils/resolvers/main-resolver-resolver';
 import { EditorContainer } from './modules/editor-container/editor-container';
 import { PostDisplayContainer } from './modules/post-display-container/post-display-container';
 
@@ -66,7 +69,7 @@ export const routes: Routes = [
   },
   {
     path: ':title',
-    resolve: [postResolver],
+    resolve: [postResolver, collectionTitleResolver],
     loadComponent: () =>
       import('./modules/collection-display/collection-display').then(
         (load) => load.CollectionDisplay,

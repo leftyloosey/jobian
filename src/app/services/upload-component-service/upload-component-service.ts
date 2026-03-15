@@ -8,46 +8,8 @@ interface HTMLInputEvent extends Event {
   providedIn: 'root',
 })
 export class UploadComponentService {
-  protected width: number = 100;
-  protected height: number = 100;
-
-  protected resize(
-    imgToResize: HTMLElement,
-    file: File,
-    kanvasRef: ElementRef<HTMLCanvasElement> | undefined,
-  ) {
-    if (!kanvasRef) {
-      throw new Error('Could not get canvasRef');
-    }
-    const canvasRef = kanvasRef.nativeElement;
-
-    const ctx = canvasRef.getContext('2d');
-    canvasRef.width = this.width;
-    canvasRef.height = this.height;
-
-    if (!ctx) {
-      throw new Error('Could not get canvas 2D context');
-    }
-
-    ctx.drawImage(
-      imgToResize as HTMLImageElement,
-      0,
-      0,
-      this.width,
-      this.height,
-    );
-
-    const jpegFile = canvasRef.toDataURL(file.type);
-    console.log(jpegFile);
-    return jpegFile;
-  }
-
-  protected imageUp(
-    imageString: string,
-    headerImageString: OutputEmitterRef<string>,
-  ) {
-    headerImageString.emit(imageString);
-  }
+  protected width: number = 200;
+  protected height: number = 0;
 
   public handleFileInput(
     event: Event,
@@ -81,9 +43,9 @@ export class UploadComponentService {
             emitStringUp(theImageResized, string);
           };
           theImage.setAttribute('src', theBlob as string);
-          theImage.onchange = function () {
-            const theImageResized = resize(theImage, file, canvasRef);
-          };
+          // theImage.onchange = function () {
+          //   const theImageResized = resize(theImage, file, canvasRef);
+          // };
         },
         false,
       );
@@ -91,5 +53,47 @@ export class UploadComponentService {
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  protected resize(
+    imgToResize: HTMLElement,
+    file: File,
+    kanvasRef: ElementRef<HTMLCanvasElement> | undefined,
+  ) {
+    if (!kanvasRef) {
+      throw new Error('Could not get canvasRef');
+    }
+
+    const stretchImage = imgToResize as HTMLImageElement;
+    this.height = (stretchImage.height * this.width) / stretchImage.width;
+
+    const canvasRef = kanvasRef.nativeElement;
+    const ctx = canvasRef.getContext('2d');
+
+    canvasRef.width = this.width;
+    canvasRef.height = this.height;
+
+    if (!ctx) {
+      throw new Error('Could not get canvas 2D context');
+    }
+
+    ctx.drawImage(
+      imgToResize as HTMLImageElement,
+      0,
+      0,
+      this.width,
+      this.height,
+    );
+
+    const jpegFile = canvasRef.toDataURL(file.type);
+    console.log(jpegFile);
+    return jpegFile;
+  }
+
+  protected imageUp(
+    imageString: string,
+    headerImageString: OutputEmitterRef<string>,
+  ) {
+    headerImageString.emit(imageString);
   }
 }

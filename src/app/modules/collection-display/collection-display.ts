@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Post } from '../../../graphql/generated';
+import { Collection, Post } from '../../../graphql/generated';
+import { extractArray } from '../../utils/functions/editorReturn';
+
 @Component({
   selector: 'app-collection-display',
   imports: [RouterLink],
@@ -12,15 +14,37 @@ export class CollectionDisplay {
   protected title: string = this.route.snapshot.params['title'];
   protected deDashedTitle: string = '';
   protected posts: Post[] = [];
+  // this component receives post data from postResolver
 
   constructor(private router: Router) {
-    this.deDashedTitle = this.title.replaceAll('-', ' ');
-    const url: string = this.route.snapshot.url.join('');
+    const resolverCollections = this.route.snapshot.data[1].data;
+    const resolverPosts = this.route.snapshot.data[0].data;
 
-    this.posts = this.route.snapshot.data[0].data.postsByCollectionTitle;
+    const collections: [Collection] =
+      extractArray<typeof resolverCollections>(resolverCollections);
+
+    const posts: [Post] = extractArray<typeof resolverPosts>(resolverPosts);
+
+    this.posts = posts;
+
+    if (!this.isUrlInCollections(collections, this.title))
+      this.router.navigate(['main']);
   }
 
   protected goToPost(id: number) {
     this.router.navigate(['display', this.title, 'post', id]);
+  }
+
+  isUrlInCollections(collectionsList: [Collection], urlTitle: string) {
+    let count = 0;
+
+    for (let index = 0; index < collectionsList.length; index++) {
+      const element = collectionsList[index];
+      if (element.urlTitle === urlTitle) {
+        this.deDashedTitle = element.title;
+        count++;
+      }
+    }
+    return count;
   }
 }

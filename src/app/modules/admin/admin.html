@@ -1,7 +1,5 @@
 @if (this.delete$ | async) {}
-<!-- @if (this.jsone$ | async; as post) {
-  {{ post.title }}
-} -->
+@if (this.$title | async) {}
 
 @if (loading()) {
   <app-graphql-spinner [loading]="loading()" />
@@ -19,10 +17,8 @@
     <button (click)="openDialog(collection)">update</button>
   </div>
 }
-<!-- @for (collection of kollection$ | async; track collection?.content) {
-  {{ collection?.title }}
-
-} -->
 
 <button (click)="openDialog(null)">create collection</button>
 <button (click)="logout()">logout</button>
+<app-change-blogitle />
+<app-create-nav-member />

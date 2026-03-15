@@ -3,7 +3,9 @@ import {
   Component,
   ContentChild,
   Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import { Observable, tap } from 'rxjs';
@@ -14,6 +16,8 @@ import {
 } from '@angular/router';
 import { LoadingService } from '../../services/loading-service/loading-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { navLoading } from '../../utils/global-signals/global-signals';
+import { toObservable } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-loading-indicator',
   templateUrl: './loading-indicator-component.html',
@@ -22,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class LoadingIndicatorComponent implements OnInit {
   loading$: Observable<boolean>;
+  apolloLoading$: Observable<boolean>;
 
   @Input()
   detectRouteTransitions = false;
@@ -29,8 +34,20 @@ export class LoadingIndicatorComponent implements OnInit {
   @ContentChild('loading')
   customLoadingIndicator: TemplateRef<any> | null = null;
 
-  constructor(private loadingService: LoadingService, private router: Router) {
+  constructor(
+    private loadingService: LoadingService,
+    private router: Router,
+  ) {
     this.loading$ = this.loadingService.loading$;
+    this.apolloLoading$ = toObservable(navLoading);
+
+    this.apolloLoading$.subscribe((loadingOn) => {
+      if (loadingOn) this.loadingService.loadingOn();
+      const loadWait = new Promise((resolve, reject) => {
+        if (!loadingOn) this.loadingService.loadingOff();
+        resolve('done');
+      });
+    });
   }
 
   ngOnInit() {
@@ -43,7 +60,7 @@ export class LoadingIndicatorComponent implements OnInit {
             } else if (event instanceof RouteConfigLoadEnd) {
               this.loadingService.loadingOff();
             }
-          })
+          }),
         )
         .subscribe();
     }

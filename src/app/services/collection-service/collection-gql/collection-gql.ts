@@ -4,6 +4,7 @@ export const COLLECTIONS_BY_USER = gql`
   query CollectionByUser($authorId: Int!) {
     collectionByUser(authorId: $authorId) {
       title
+      urlTitle
       heading
       headerImageString
       id
@@ -15,6 +16,13 @@ export const COLLECTIONS_BY_USER = gql`
     }
   }
 `;
+// export const COLLECTIONS_TITLE = gql`
+//   query CollectionByUserTitle($authorId: Int!) {
+//     collectionByUser(authorId: $authorId) {
+//       title
+//     }
+//   }
+// `;
 
 export const COLLECTION_WITH_POSTS = gql`
   query FindOneWithPosts($id: Int!) {
@@ -26,6 +34,7 @@ export const COLLECTION_WITH_POSTS = gql`
         id
         title
         content
+        timestamp
       }
     }
   }
@@ -36,6 +45,7 @@ export const CREATE_COLLECTION = gql`
     createCollection(createCollectionInput: $input) {
       authorId
       title
+      urlTitle
       heading
       headerImageString
     }
@@ -48,6 +58,7 @@ export const UPSERT_COLLECTION = gql`
       id
       authorId
       title
+      urlTitle
       headerImageString
       heading
     }
@@ -58,6 +69,7 @@ export const UPDATE_COLLECTION = gql`
   mutation UpdateCollectionInput($input: UpdateCollectionInput!) {
     updateCollection(updateCollectionInput: $input) {
       title
+      urlTitle
       heading
       headerImageString
     }
