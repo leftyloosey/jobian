@@ -1,0 +1,23 @@
+@if (newPost | async) {}
+@if (updatePost | async) {}
+@if (watchPost | async) {}
+@if (deletePost | async) {}
+
+@if (loading()) {
+  <app-graphql-spinner [loading]="loading()" />
+}
+
+<form [formGroup]="form" class="editor">
+  <input type="text" formControlName="title" placeholder="title" />
+  <quill-editor
+    [styles]="{ height: '400px' }"
+    formControlName="html"
+    (onEditorCreated)="createEditor($event)"
+  ></quill-editor>
+
+  <button (click)="saveChanges()">save changes</button>
+  <button (click)="deleteThisPost($event)">delete post</button>
+</form>
+<button class="editor" (click)="backToCollectionEdit()">
+  back to collections
+</button>
