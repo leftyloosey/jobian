@@ -4,9 +4,7 @@
 @if (error) {
   <div>Error :{{ error }}</div>
 }
+
 @for (collection of this.display$ | async; track collection?.title) {
-  <img [src]="collection?.headerImageString" />
-  <a routerLink class="lank" (click)="openCollection(collection?.urlTitle)">
-    {{ collection?.title }}
-  </a>
+  <app-collection-card [collectionDown]="collection" />
 }

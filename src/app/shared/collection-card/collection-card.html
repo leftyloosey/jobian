@@ -1,5 +1,5 @@
-<mat-card class="collection-card" appearance="outlined">
-  <div class="collection-card__header">
+<mat-card appearance="outlined">
+  <div class="collection-card-header">
     <mat-card-header>
       <img [src]="collection?.headerImageString" />
     </mat-card-header>
@@ -10,8 +10,8 @@
   </div>
 
   <mat-card-actions align="end">
-    <button matButton (click)="openCollection()">Open</button>
-    <button matButton (click)="updateCollection()">Update</button>
-    <button matButton (click)="deleteCollection()">Delete</button>
+    <button matButton (click)="openCollection(collection?.urlTitle)">
+      Learn More
+    </button>
   </mat-card-actions>
 </mat-card>

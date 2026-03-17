@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Collection, Post } from '../../../graphql/generated';
 import { extractArray } from '../../utils/functions/editorReturn';
 import { sortByDate } from '../../utils/functions/sort-posts';
+import { PostCard } from '../../shared/post-card/post-card';
 
 @Component({
   selector: 'app-collection-display',
-  imports: [RouterLink],
+  imports: [PostCard],
   templateUrl: './collection-display.html',
   styleUrl: './collection-display.scss',
 })

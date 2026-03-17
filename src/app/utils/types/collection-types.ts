@@ -8,6 +8,8 @@ export type CollectionWithPartial =
       title: string;
       heading?: string | null | undefined;
       id: number;
+      headerImageString: string;
+      urlTitle: string;
       posts?:
         | ({
             __typename?: 'Post' | undefined;
@@ -22,6 +24,8 @@ export type CollectionWithPartial =
       __typename?: 'Collection';
       title: string;
       heading?: string | null;
+      headerImageString: string;
+      urlTitle: string;
       id: number;
       posts?: Array<{
         __typename?: 'Post';

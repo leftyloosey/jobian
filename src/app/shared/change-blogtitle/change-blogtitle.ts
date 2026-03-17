@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { AdminService } from '../../services/admin-service/admin-service';
 import {
   NavHeading,
@@ -19,6 +19,8 @@ import { MatButton } from '@angular/material/button';
 import { MatDialogActions } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 import { extractArray } from '../../utils/functions/editorReturn';
 import { navHeadingArrayReturn } from '../../utils/types/nav-types';
 
@@ -27,6 +29,7 @@ import { navHeadingArrayReturn } from '../../utils/types/nav-types';
   imports: [
     AsyncPipe,
     MatFormFieldModule,
+    MatExpansionModule,
     MatInputModule,
     ReactiveFormsModule,
     MatButton,
@@ -43,6 +46,7 @@ export class ChangeBlogTitle {
   get title() {
     return this.changeTitleForm.get('title') as FormControl;
   }
+  readonly panelOpenState = signal(false);
 
   protected $titleChange: Observable<
     Apollo.MutateResult<UpsertNavHeadingMutation>

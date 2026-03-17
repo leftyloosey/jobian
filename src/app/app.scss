@@ -1,16 +1,17 @@
 .main-body {
-  background-color: #f0f2f5; /* Light grey colored background */
+  background-color: #f0f2f5;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
+  min-height: 100%;
 }
 
 .content-wrapper {
-  background-color: white; /* White column */
-  width: 100%;
-  max-width: 800px; /* Centered column width */
-  min-height: 100vh; /* Full height */
+  background-color: white;
+  // max-width: 800px;
+  width: 66%;
+  min-height: 100%;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Adds slight shadow */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

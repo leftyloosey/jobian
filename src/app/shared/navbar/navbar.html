@@ -1,12 +1,12 @@
 <section class="navbar">
   <div class="navbar__title-frame">
-    <p class="navbar__title">
+    <h2 class="navbar__title">
       <a class="navbar__title--text" [routerLink]="home">
         @if (heading$ | async) {
           {{ blogTitle() }}
         }
       </a>
-    </p>
+    </h2>
   </div>
   <div class="navbar__options-frame">
     @for (member of members$ | async; track member?.id) {

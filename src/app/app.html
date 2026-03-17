@@ -2,11 +2,11 @@
 
 <app-loading-indicator [detectRouteTransitions]="true" />
 
-<body class="main-body">
+<div class="main-body">
   <div class="content-wrapper">
     @if (navrRefresh()) {
       <app-navbar-container />
     }
     <router-outlet />
   </div>
-</body>
+</div>

@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminService } from '../../services/admin-service/admin-service';
 import {
   CollectionsWithPartial,
+  CollectionWithPartial,
   MaybeCollection,
 } from '../../utils/types/collection-types';
 import { NameService } from '../../services/name-service/name-service';
@@ -115,7 +116,11 @@ export class Admin {
     });
   }
 
-  protected openDialog(collection: MaybeCollection): void {
+  protected updateCollection(collection: CollectionWithPartial): void {
+    if (collection) this.openDialog(collection);
+  }
+
+  protected openDialog(collection: CollectionWithPartial): void {
     const coll = {
       id: collection?.id ?? 0,
       title: collection?.title ?? '',

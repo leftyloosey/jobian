@@ -15,9 +15,10 @@
   <div class="row">
     <app-collection-admin-row
       (idUpForDelete)="deleteCollection($event)"
-      [collection]="collection"
+      (collectionUpForOpen)="updateCollection($event)"
+      [downCollection]="collection"
     />
-    <button (click)="openDialog(collection)">update</button>
+    <!-- <button (click)="openDialog(collection)">update</button> -->
   </div>
 }
 
