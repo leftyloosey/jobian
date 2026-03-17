@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Collection, Post } from '../../../graphql/generated';
 import { extractArray } from '../../utils/functions/editorReturn';
+import { sortByDate } from '../../utils/functions/sort-posts';
 
 @Component({
   selector: 'app-collection-display',
@@ -23,8 +24,9 @@ export class CollectionDisplay {
     const collections: [Collection] =
       extractArray<typeof resolverCollections>(resolverCollections);
 
-    const posts: [Post] = extractArray<typeof resolverPosts>(resolverPosts);
-
+    let posts: [Post] = extractArray<typeof resolverPosts>(resolverPosts);
+    posts = sortByDate(posts);
+    // posts = sortPostsByDate(posts) as [Post];
     this.posts = posts;
 
     if (!this.isUrlInCollections(collections, this.title))

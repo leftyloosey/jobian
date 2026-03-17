@@ -8,6 +8,9 @@
 @if (error) {
   <div>Error :{{ error }}</div>
 }
+
+<app-change-blogitle />
+
 @for (collection of collection$ | async; track collection?.title) {
   <div class="row">
     <app-collection-admin-row
@@ -20,5 +23,5 @@
 
 <button (click)="openDialog(null)">create collection</button>
 <button (click)="logout()">logout</button>
-<app-change-blogitle />
+
 <app-create-nav-member />

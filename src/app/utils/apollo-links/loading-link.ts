@@ -8,7 +8,6 @@ export const loadingLink = new ApolloLink((operation, forward) => {
   return forward(operation).pipe(
     map((result) => {
       if (result.data) {
-        console.log('sloopey', result);
         navLoading.set(false);
       }
 

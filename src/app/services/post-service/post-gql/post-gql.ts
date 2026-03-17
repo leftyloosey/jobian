@@ -36,6 +36,7 @@ export const POSTS_BY_COLLECTION_TITLE = gql`
       content
       id
       collectionId
+      timestamp
     }
   }
 `;

@@ -23,7 +23,15 @@ export const MEMBERS_BY_HEADING = gql`
   query NavMembersByHeading($collectionId: Int!) {
     navMembersInHeading(collectionId: $collectionId) {
       title
-      content
+      timestamp
+      id
+    }
+  }
+`;
+
+export const MEMBERS_BY_HEADING_LENGTH = gql`
+  query NavMembersByHeadingLength($collectionId: Int!) {
+    navMembersInHeading(collectionId: $collectionId) {
       id
     }
   }

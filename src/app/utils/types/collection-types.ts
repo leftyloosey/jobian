@@ -77,6 +77,7 @@ export type CollectionsOfOwnerReturn =
       title: string;
       urlTitle: string;
       headerImageString: string;
+      timestamp: any;
     } | null)[]
   | (
       | DeepPartial<{
@@ -86,12 +87,36 @@ export type CollectionsOfOwnerReturn =
           title: string;
           urlTitle: string;
           headerImageString: string;
+          timestamp: any;
         }>
       | null
       | undefined
     )[]
   | null
   | undefined;
+// export type CollectionsOfOwnerReturn =
+//   | ({
+//       __typename?: 'Collection' | undefined;
+//       id: number;
+//       heading: string;
+//       title: string;
+//       urlTitle: string;
+//       headerImageString: string;
+//     } | null)[]
+//   | (
+//       | DeepPartial<{
+//           __typename?: 'Collection';
+//           id: number;
+//           heading: string;
+//           title: string;
+//           urlTitle: string;
+//           headerImageString: string;
+//         }>
+//       | null
+//       | undefined
+//     )[]
+//   | null
+//   | undefined;
 
 export type MaybeCollection =
   | Collection

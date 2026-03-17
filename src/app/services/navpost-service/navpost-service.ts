@@ -111,10 +111,10 @@ export class NavPostService extends PostServiceBaseClass<
     return this.updatePost.mutate({
       variables: { input },
       refetchQueries: [
-        {
-          query: NavMembersByHeadingDocument,
-          variables: { id: input2.collectionId },
-        },
+        // {
+        //   query: NavMembersByHeadingDocument,
+        //   variables: { id: input2.collectionId },
+        // },
         {
           query: FindOneNavDocument,
           variables: { id },

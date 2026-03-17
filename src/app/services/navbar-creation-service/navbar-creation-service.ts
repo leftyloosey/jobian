@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   AllNavHeadingsDocument,
   AllNavHeadingsGQL,
@@ -6,11 +6,12 @@ import {
   CreateNavMemberMutation,
   NavMembersByHeadingDocument,
   NavMembersByHeadingGQL,
+  NavMembersByHeadingLengthGQL,
   UpdateNavHeadingInput,
   UpsertNavHeadingGQL,
   UpsertNavHeadingMutation,
 } from '../../../graphql/generated';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { NavbarContainer } from '../../modules/navbar-container/navbar-container';
 import { NavUserOpen } from '../nav-user-open/nav-user-open';
 import { NavAdminOpen } from '../nav-admin-open/nav-admin-open';
@@ -24,6 +25,7 @@ import { LoadingService } from '../loading-service/loading-service';
 })
 export class NavbarCreationService {
   public navHeadCollectionId: number;
+  public blogTitle = signal<string>('default');
 
   protected loggedIn = computed(() => {
     if (this.name.loggedIn() === true) return true;
@@ -33,7 +35,7 @@ export class NavbarCreationService {
   constructor(
     private allHeadings: AllNavHeadingsGQL,
     private allMembers: NavMembersByHeadingGQL,
-    private loading: LoadingService,
+    private lengthMembers: NavMembersByHeadingLengthGQL,
     private createNavHead: UpsertNavHeadingGQL,
     private navService: NavPostService,
     private name: NameService,
@@ -44,8 +46,20 @@ export class NavbarCreationService {
   public watchAllHeadings() {
     return this.allHeadings.watch().valueChanges.pipe(map((result) => result));
   }
+
   public watchAllMembers(collectionId: number) {
     return this.allMembers
+      .watch({
+        variables: { collectionId },
+      })
+      .valueChanges.pipe(
+        map((result) => {
+          return result;
+        }),
+      );
+  }
+  public membersForLength(collectionId: number) {
+    return this.lengthMembers
       .watch({
         variables: { collectionId },
       })
@@ -58,8 +72,6 @@ export class NavbarCreationService {
 
   public changeTitle(
     title: string,
-    // authorId: number,
-    // id: number,
   ): Observable<Apollo.MutateResult<UpsertNavHeadingMutation>> {
     const input: UpdateNavHeadingInput = {
       id: this.name.NAV_NUMBER,
@@ -96,30 +108,6 @@ export class NavbarCreationService {
       ],
     });
   }
-  // public addMember(
-  //   // collectionId: number,
-  //   // content: any,
-  //   title: string,
-  // ): Observable<Apollo.MutateResult<CreateNavMemberMutation>> {
-  //   console.log('nav collec id', this.navHeadCollectionId);
-  //   const input = {
-  //     collectionId: this.name.NAV_NUMBER,
-  //     content: '',
-  //     title,
-  //   };
-  //   return this.createNavMember.mutate({
-  //     variables: { input },
-  //     refetchQueries: [
-  //       {
-  //         query: NavMembersByHeadingDocument,
-  //         variables: { collectionId: this.navHeadCollectionId },
-  //       },
-  //       {
-  //         query: AllNavMembersDocument,
-  //       },
-  //     ],
-  //   });
-  // }
 
   public serviceReturn(navBarContainer: NavbarContainer) {
     let navElemnt = inject(NavUserOpen);

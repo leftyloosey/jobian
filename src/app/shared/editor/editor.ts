@@ -140,8 +140,7 @@ export class Editor {
 
   deleteThisPost(e: Event): void {
     e.preventDefault();
-    console.log(this.postId);
-    console.log(this.collectionId);
+
     this.editor.deletePost.next({
       postId: this.postId,
       collectionId: this.collectionId,

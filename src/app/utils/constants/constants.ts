@@ -1,2 +1,1 @@
-// export const BUCKET_NAME = 'job-bucket';
-// export const CLOUDFLARE_BUCKET = 'https://hardinportfolio.com/';
+export const NAVMEMBER_TOTAL = 4;

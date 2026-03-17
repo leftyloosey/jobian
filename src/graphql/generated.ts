@@ -61,6 +61,7 @@ export type CreateNavHeadingInput = {
 export type CreateNavMemberInput = {
   collectionId: Scalars['Int']['input'];
   content: Scalars['JSON']['input'];
+  timestamp?: InputMaybe<Scalars['Date']['input']>;
   title: Scalars['String']['input'];
 };
 
@@ -215,6 +216,7 @@ export type NavMember = {
   content: Scalars['JSON']['output'];
   id: Scalars['Int']['output'];
   navHeading: NavHeading;
+  timestamp?: Maybe<Scalars['Date']['output']>;
   title: Scalars['String']['output'];
 };
 
@@ -459,7 +461,14 @@ export type NavMembersByHeadingQueryVariables = Exact<{
 }>;
 
 
-export type NavMembersByHeadingQuery = { __typename?: 'Query', navMembersInHeading?: Array<{ __typename?: 'NavMember', title: string, content: any, id: number } | null> | null };
+export type NavMembersByHeadingQuery = { __typename?: 'Query', navMembersInHeading?: Array<{ __typename?: 'NavMember', title: string, timestamp?: any | null, id: number } | null> | null };
+
+export type NavMembersByHeadingLengthQueryVariables = Exact<{
+  collectionId: Scalars['Int']['input'];
+}>;
+
+
+export type NavMembersByHeadingLengthQuery = { __typename?: 'Query', navMembersInHeading?: Array<{ __typename?: 'NavMember', id: number } | null> | null };
 
 export type CreateNavMemberMutationVariables = Exact<{
   input: CreateNavMemberInput;
@@ -508,7 +517,7 @@ export type PostsByCollectionTitleQueryVariables = Exact<{
 }>;
 
 
-export type PostsByCollectionTitleQuery = { __typename?: 'Query', postsByCollectionTitle: Array<{ __typename?: 'Post', title?: string | null, content?: any | null, id: number, collectionId?: number | null } | null> };
+export type PostsByCollectionTitleQuery = { __typename?: 'Query', postsByCollectionTitle: Array<{ __typename?: 'Post', title?: string | null, content?: any | null, id: number, collectionId?: number | null, timestamp?: any | null } | null> };
 
 export type UpdatePostInputMutationVariables = Exact<{
   input: UpdatePostInput;
@@ -527,7 +536,7 @@ export type RemovePostMutation = { __typename?: 'Mutation', removePost?: { __typ
 export type CollectionsOfOwnerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CollectionsOfOwnerQuery = { __typename?: 'Query', collectionsOfOwner: { __typename?: 'User', collections?: Array<{ __typename?: 'Collection', id: number, heading: string, title: string, urlTitle: string, headerImageString: string } | null> | null } };
+export type CollectionsOfOwnerQuery = { __typename?: 'Query', collectionsOfOwner: { __typename?: 'User', collections?: Array<{ __typename?: 'Collection', id: number, heading: string, title: string, urlTitle: string, headerImageString: string, timestamp: any } | null> | null } };
 
 export type CollectionsOfOwnerTitleQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -853,7 +862,7 @@ export const NavMembersByHeadingDocument = gql`
     query NavMembersByHeading($collectionId: Int!) {
   navMembersInHeading(collectionId: $collectionId) {
     title
-    content
+    timestamp
     id
   }
 }
@@ -864,6 +873,24 @@ export const NavMembersByHeadingDocument = gql`
   })
   export class NavMembersByHeadingGQL extends Apollo.Query<NavMembersByHeadingQuery, NavMembersByHeadingQueryVariables> {
     document = NavMembersByHeadingDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const NavMembersByHeadingLengthDocument = gql`
+    query NavMembersByHeadingLength($collectionId: Int!) {
+  navMembersInHeading(collectionId: $collectionId) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class NavMembersByHeadingLengthGQL extends Apollo.Query<NavMembersByHeadingLengthQuery, NavMembersByHeadingLengthQueryVariables> {
+    document = NavMembersByHeadingLengthDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -996,6 +1023,7 @@ export const PostsByCollectionTitleDocument = gql`
     content
     id
     collectionId
+    timestamp
   }
 }
     `;
@@ -1058,6 +1086,7 @@ export const CollectionsOfOwnerDocument = gql`
       title
       urlTitle
       headerImageString
+      timestamp
     }
   }
 }

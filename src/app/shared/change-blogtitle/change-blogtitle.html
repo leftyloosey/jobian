@@ -1,2 +1,37 @@
+@if (this.$titleChange | async) {}
 @if (this.$title | async) {}
-<button (click)="inputNewTitle()">change title</button>
+
+<section class="top-form">
+  <form [formGroup]="changeTitleForm">
+    <div>
+      <mat-form-field hideRequiredMarker>
+        <mat-label for="title">Title</mat-label>
+        <input
+          autocomplete="off"
+          type="text"
+          formControlName="title"
+          matInput
+          required
+        />
+        <!-- @if (original?.invalid && (original?.dirty)) {
+        <div>
+          @if (original?.hasError('required')) {
+          <div class="error">Original is required.</div>
+          }
+        </div>
+        } -->
+      </mat-form-field>
+
+      <mat-dialog-actions align="center">
+        <button
+          class="submission-field__button"
+          (click)="inputNewTitle()"
+          matButton="filled"
+          color="secondary"
+        >
+          Change Title
+        </button>
+      </mat-dialog-actions>
+    </div>
+  </form>
+</section>

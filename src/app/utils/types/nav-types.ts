@@ -39,3 +39,23 @@ export type navMemberArrayReturn =
     )[]
   | null
   | undefined;
+
+export type navListOnlyReturn =
+  | ({
+      __typename?: 'NavMember' | undefined;
+      title: string;
+      timestamp?: any;
+      id: number;
+    } | null)[]
+  | (
+      | DeepPartial<{
+          __typename?: 'NavMember';
+          title: string;
+          timestamp?: any | null;
+          id: number;
+        }>
+      | null
+      | undefined
+    )[]
+  | null
+  | undefined;

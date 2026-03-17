@@ -10,8 +10,10 @@ import { extractArray } from '../../utils/functions/editorReturn';
 import { NavHeading } from '../../../graphql/generated';
 import {
   navHeadingArrayReturn,
+  navListOnlyReturn,
   navMemberArrayReturn,
 } from '../../utils/types/nav-types';
+import { sortByDate } from '../../utils/functions/sort-posts';
 
 @Component({
   selector: 'app-navbar',
@@ -33,7 +35,8 @@ export class Navbar {
 
   protected heading$!: Observable<navHeadingArrayReturn>;
 
-  protected members$!: Observable<navMemberArrayReturn>;
+  protected members$!: Observable<navListOnlyReturn>;
+  // protected members$!: Observable<navMemberArrayReturn>;
 
   protected loading = signal<boolean>(true);
   protected blogTitle = signal<string>('');
@@ -46,10 +49,10 @@ export class Navbar {
 
   constructor(
     private name: NameService,
-    private navHead: NavbarCreationService,
+    private navService: NavbarCreationService,
     private navOen: NavUserOpen,
   ) {
-    this.heading$ = this.navHead.watchAllHeadings().pipe(
+    this.heading$ = this.navService.watchAllHeadings().pipe(
       map((data) => {
         this.loading.set(data.loading);
 
@@ -64,11 +67,14 @@ export class Navbar {
       }),
     );
 
-    this.members$ = this.navHead
-      .watchAllMembers(this.navHead.navHeadCollectionId)
+    this.members$ = this.navService
+      .watchAllMembers(this.navService.navHeadCollectionId)
       .pipe(
         map((data) => {
-          return data?.data?.navMembersInHeading;
+          let members = data?.data?.navMembersInHeading;
+          members = sortByDate(members);
+          // members = sortNavByDate(members);
+          return members;
         }),
       );
   }

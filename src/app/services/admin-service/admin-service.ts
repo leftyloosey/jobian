@@ -18,11 +18,6 @@ export class AdminService {
   public titleChangeSubject = new Subject<{ blogTitle: string }>();
   public $titleChangeSubjectObs = this.titleChangeSubject.asObservable();
 
-  // public addMemberSubject = new Subject<CreateNavMemberInput>();
-  public addMemberSubject = new Subject<{
-    // collectionId: number;
-    title: string;
-    // content: string;
-  }>();
+  public addMemberSubject = new Subject<{ title: string }>();
   public $addMemberSubjectObs = this.addMemberSubject.asObservable();
 }

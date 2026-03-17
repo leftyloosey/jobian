@@ -9,6 +9,7 @@ export const COLLECTIONS_OF_OWNER = gql`
         title
         urlTitle
         headerImageString
+        timestamp
       }
     }
   }
