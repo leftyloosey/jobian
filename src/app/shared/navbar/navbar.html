@@ -11,11 +11,7 @@
   <div class="navbar__options-frame">
     @for (member of members$ | async; track member?.id) {
       <p class="navbar__option">
-        <a
-          class="navbar__option--text"
-          routerLink
-          (click)="openNavElement(member?.id)"
-        >
+        <a class="navbar__option--text" (click)="openNavElement(member?.id)">
           {{ member?.title }}</a
         >
       </p>

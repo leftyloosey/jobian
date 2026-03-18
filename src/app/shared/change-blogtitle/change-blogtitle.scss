@@ -1,5 +1,15 @@
-.top-form {
-  width: 100%;
+.blog-row {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+
+  &__title-form {
+    display: flex;
+    flex-direction: row;
+  }
+  &__title-form--button {
+    padding-left: 0.5rem;
+    padding-top: 0.5rem;
+  }
 }

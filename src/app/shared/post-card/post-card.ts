@@ -2,6 +2,7 @@ import { Component, input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Post } from '../../../graphql/generated';
 import { Router, RouterLink } from '@angular/router';
+import { cleanAndDash } from '../../utils/functions/dashing-functions';
 
 @Component({
   selector: 'app-post-card',
@@ -22,6 +23,9 @@ export class PostCard implements OnInit {
     if (this.post?.title) this.title = this.post?.title;
   }
   protected goToPost(id: number) {
-    this.router.navigate(['display', this.title, 'post', id]);
+    const title = cleanAndDash(this.title);
+    // this.router.navigate(['d', 'post', id]);
+    this.router.navigate(['d', title], { state: { id, displayMode: 'post' } });
+    // this.router.navigate(['d', 'post', id, title]);
   }
 }

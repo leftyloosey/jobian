@@ -8,21 +8,22 @@
 @if (error) {
   <div>Error :{{ error }}</div>
 }
+<div class="admin">
+  <app-change-blogitle />
 
-<app-change-blogitle />
-
-@for (collection of collection$ | async; track collection?.title) {
-  <div class="row">
-    <app-collection-admin-row
-      (idUpForDelete)="deleteCollection($event)"
-      (collectionUpForOpen)="updateCollection($event)"
-      [downCollection]="collection"
-    />
-    <!-- <button (click)="openDialog(collection)">update</button> -->
+  @for (collection of collection$ | async; track collection?.title) {
+    <div class="row">
+      <app-collection-admin-row
+        (idUpForDelete)="deleteCollection($event)"
+        (collectionUpForOpen)="updateCollection($event)"
+        [downCollection]="collection"
+      />
+    </div>
+  }
+  <div class="admin__bottom-row">
+    <button matButton="filled" (click)="openDialog(null)">
+      Create Collection
+    </button>
+    <button matButton="outlined" (click)="logout()">Logout</button>
   </div>
-}
-
-<button (click)="openDialog(null)">create collection</button>
-<button (click)="logout()">logout</button>
-
-<app-create-nav-member />
+</div>

@@ -6,5 +6,10 @@
 }
 
 @for (collection of this.display$ | async; track collection?.title) {
-  <app-collection-card [collectionDown]="collection" />
+  <div class="main-collection">
+    <div>
+      <app-collection-card [collectionDown]="collection" />
+    </div>
+    <div></div>
+  </div>
 }

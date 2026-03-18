@@ -20,6 +20,7 @@ import {
   UpsertCollectionInputGQL,
   UpsertCollectionInputMutation,
   CollectionByUserGQL,
+  CollectionsOfOwnerDocument,
 } from '../../../graphql/generated';
 
 @Injectable({
@@ -81,6 +82,9 @@ export class CollectionService {
           query: CollectionByUserDocument,
           variables: { authorId: this.name.getUser() },
         },
+        {
+          query: CollectionsOfOwnerDocument,
+        },
       ],
     });
   }
@@ -103,7 +107,15 @@ export class CollectionService {
   public updateCollection(
     input: UpdateCollectionInput,
   ): Observable<Apollo.MutateResult<unknown>> {
-    return this.updateOne.mutate({ variables: { input } });
+    return this.updateOne.mutate({
+      variables: { input },
+      refetchQueries: [
+        {
+          query: CollectionByUserDocument,
+          variables: { authorId: this.name.getUser() },
+        },
+      ],
+    });
 
     // return this.apollo.mutate({
     //   mutation: UPDATE_COLLECTION,

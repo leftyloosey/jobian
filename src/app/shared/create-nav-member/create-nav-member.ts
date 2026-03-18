@@ -8,10 +8,12 @@ import { AsyncPipe } from '@angular/common';
 import { navMemberArrayReturn } from '../../utils/types/nav-types';
 import { extractArray } from '../../utils/functions/editorReturn';
 import { NAVMEMBER_TOTAL } from '../../utils/constants/constants';
+import { MatIcon } from '@angular/material/icon';
+import { MatFabButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-create-nav-member',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, MatIcon, MatFabButton],
   templateUrl: './create-nav-member.html',
   styleUrl: './create-nav-member.scss',
 })
@@ -43,7 +45,7 @@ export class CreateNavMember {
   }
 
   inputNewMember() {
-    const title = window.prompt('Member name ...') ?? '';
+    const title = window.prompt('Add navigation button ...') ?? '';
     if (title) this.admin.addMemberSubject.next({ title });
   }
 }

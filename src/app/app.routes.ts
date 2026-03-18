@@ -47,18 +47,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./modules/login/login').then((load) => load.Login),
   },
+  // {
+  //   path: 'redirect',
+  //   component: Redirector,
+  // },
   {
-    path: 'redirect',
-    component: Redirector,
-  },
-  {
-    // path: 'display',
-    path: 'display/:title/:displaymode/:postid',
+    path: 'd/:title',
     loadComponent: () =>
       import('./modules/post-display-container/post-display-container').then(
         (load) => load.PostDisplayContainer,
       ),
   },
+
   {
     // path: 'display',
     path: 'display/:displaymode/:postid',

@@ -2,59 +2,41 @@
 @if (this.$title | async) {}
 
 <mat-accordion>
-  <!-- <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title> This is the expansion title </mat-panel-title>
-      <mat-panel-description>
-        This is a summary of the content
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel> -->
   <mat-expansion-panel
     (opened)="panelOpenState.set(true)"
     (closed)="panelOpenState.set(false)"
   >
     <mat-expansion-panel-header>
-      <mat-panel-title> Title </mat-panel-title>
-      <!-- <mat-panel-description>
-        Currently I am {{ panelOpenState() ? "open" : "closed" }}
-      </mat-panel-description> -->
+      <mat-panel-title> Navigation Bar </mat-panel-title>
     </mat-expansion-panel-header>
-    <!-- <p>I'm visible because I am open</p> -->
-    <section class="top-form">
-      <form [formGroup]="changeTitleForm">
-        <div>
-          <mat-form-field hideRequiredMarker>
-            <mat-label for="title">Title</mat-label>
-            <input
-              autocomplete="off"
-              type="text"
-              formControlName="title"
-              matInput
-              required
-            />
-            <!-- @if (original?.invalid && (original?.dirty)) {
-        <div>
-          @if (original?.hasError('required')) {
-          <div class="error">Original is required.</div>
-          }
-        </div>
-        } -->
-          </mat-form-field>
+    <div class="blog-row">
+      <section>
+        <form [formGroup]="changeTitleForm">
+          <div class="blog-row__title-form">
+            <mat-form-field hideRequiredMarker>
+              <mat-label for="title">Title</mat-label>
+              <input
+                autocomplete="off"
+                type="text"
+                formControlName="title"
+                matInput
+                required
+              />
+            </mat-form-field>
+            <div class="blog-row__title-form--button">
+              <button
+                (click)="inputNewTitle()"
+                matButton="filled"
+                color="secondary"
+              >
+                Change Title
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
 
-          <mat-dialog-actions align="center">
-            <button
-              class="submission-field__button"
-              (click)="inputNewTitle()"
-              matButton="filled"
-              color="secondary"
-            >
-              Change Title
-            </button>
-          </mat-dialog-actions>
-        </div>
-      </form>
-    </section>
+      <app-create-nav-member />
+    </div>
   </mat-expansion-panel>
 </mat-accordion>

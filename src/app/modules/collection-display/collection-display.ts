@@ -27,15 +27,12 @@ export class CollectionDisplay {
 
     let posts: [Post] = extractArray<typeof resolverPosts>(resolverPosts);
     posts = sortByDate(posts);
-    // posts = sortPostsByDate(posts) as [Post];
     this.posts = posts;
 
-    if (!this.isUrlInCollections(collections, this.title))
+    const isInCollection = this.isUrlInCollections(collections, this.title);
+    if (!isInCollection) {
       this.router.navigate(['main']);
-  }
-
-  protected goToPost(id: number) {
-    this.router.navigate(['display', this.title, 'post', id]);
+    }
   }
 
   isUrlInCollections(collectionsList: [Collection], urlTitle: string) {
@@ -48,6 +45,7 @@ export class CollectionDisplay {
         count++;
       }
     }
+
     return count;
   }
 }

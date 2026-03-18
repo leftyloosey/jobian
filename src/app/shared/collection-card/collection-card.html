@@ -1,5 +1,9 @@
 <mat-card appearance="outlined">
-  <div class="collection-card-header">
+  <div
+    class="collection-card-header"
+    style="cursor: pointer"
+    (click)="openCollection(collection?.urlTitle)"
+  >
     <mat-card-header>
       <img [src]="collection?.headerImageString" />
     </mat-card-header>

@@ -1,4 +1,13 @@
 @if (this.member$ | async) {}
 @if (this.members$ | async) {}
 
-<button (click)="inputNewMember()" [disabled]="newNavAllowed">+</button>
+<!-- <button (click)="inputNewMember()" [disabled]="newNavAllowed">+</button> -->
+<button
+  mat-fab
+  color="primary"
+  aria-label="Add item"
+  (click)="inputNewMember()"
+  [disabled]="newNavAllowed"
+>
+  <mat-icon>add</mat-icon>
+</button>

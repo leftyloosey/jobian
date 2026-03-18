@@ -22,7 +22,7 @@ export class CollectionCard implements OnInit {
   openCollection(urlTitle: string | undefined): void {
     if (urlTitle) {
       // navigates by dashed title to make better url display
-
+      console.log(urlTitle);
       this.router.navigate([`${urlTitle}`]);
     }
   }

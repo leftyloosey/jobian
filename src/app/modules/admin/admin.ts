@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CollectionAdminRow } from '../../shared/collection-admin-row/collection-admin-row';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
   RemoveCollectionMutation,
@@ -23,6 +23,7 @@ import { CreateCollectionDialog } from '../../shared/create-collection-dialog/cr
 import { cleanAndDash } from '../../utils/functions/dashing-functions';
 import { ChangeBlogTitle } from '../../shared/change-blogtitle/change-blogtitle';
 import { CreateNavMember } from '../../shared/create-nav-member/create-nav-member';
+import { sortByDate } from '../../utils/functions/sort-posts';
 @Component({
   selector: 'app-admin',
   imports: [
@@ -33,7 +34,7 @@ import { CreateNavMember } from '../../shared/create-nav-member/create-nav-membe
     CollectionAdminRow,
     GraphqlSpinner,
     ChangeBlogTitle,
-    CreateNavMember,
+    MatButton,
   ],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
@@ -86,7 +87,9 @@ export class Admin {
     this.collection$ = this.collection.watchCollections().pipe(
       map((data) => {
         this.loading.set(data.loading);
-        return data.data?.collectionByUser;
+        const collections = sortByDate(data.data?.collectionByUser);
+        return collections;
+        // return data.data?.collectionByUser;
       }),
     );
   }
@@ -136,6 +139,7 @@ export class Admin {
 
         // format title to be used in url navigation
         const urlTitle = cleanAndDash(title);
+        console.log(urlTitle);
         this.upsertCollection(id, title, urlTitle, heading, headerImageString);
       }
     });

@@ -1,3 +1,12 @@
-.row {
-  // justify-content: center;
+.admin {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  min-height: 100vh;
+}
+
+.admin__bottom-row {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
 }

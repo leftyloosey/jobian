@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NameService } from '../../services/name-service/name-service';
 import { PostDisplay } from '../../shared/post-display/post-display';
 import { PostDisplayService } from '../../services/post-display-service/post-display-service';
@@ -34,9 +34,15 @@ export class PostDisplayContainer {
   constructor(
     route: ActivatedRoute,
     private name: NameService,
+    private router: Router,
   ) {
+    const currentNav = computed(() => this.router.currentNavigation());
+    const state = currentNav()?.extras.state as {
+      id: number;
+      displayMode: string;
+    };
+
     const editorMode = route.snapshot.paramMap.get('displaymode') ?? '';
-    // const editorMode = route.snapshot.paramMap.get('editormode') ?? '';
     const collectionIdParam = route.snapshot.paramMap.get('collectionid') ?? '';
     const postIdParam = route.snapshot.paramMap.get('postid') ?? '';
     const updateParam = route.snapshot.paramMap.get('update') ?? '';
@@ -45,8 +51,41 @@ export class PostDisplayContainer {
     const postId = parseInt(postIdParam);
 
     this.collectionId.set(collectionId);
-    this.postId.set(postId);
-    this.param.set(editorMode);
+
+    // if there is a state object, that means we are navigating from the user-facing
+    // post display pipeline, and the needed state is in the navigation object
+    // instead of the params.
+    if (state?.id) {
+      this.postId.set(state.id);
+      this.param.set(state.displayMode);
+    } else {
+      this.postId.set(postId);
+      this.param.set(editorMode);
+    }
+
     if (updateParam === 'update') this.updateMode.set(true);
   }
+  // constructor(
+  //   route: ActivatedRoute,
+  //   private name: NameService,
+  //   private router: Router,
+  // ) {
+  //   const currentNav = computed(() => this.router.currentNavigation());
+  //   const state = currentNav()?.extras.state as { id: number, displayMode: string };
+
+  //   const editorMode = route.snapshot.paramMap.get('displaymode') ?? '';
+  //   // const editorMode = route.snapshot.paramMap.get('editormode') ?? '';
+  //   const collectionIdParam = route.snapshot.paramMap.get('collectionid') ?? '';
+  //   const postIdParam = route.snapshot.paramMap.get('postid') ?? '';
+  //   const updateParam = route.snapshot.paramMap.get('update') ?? '';
+
+  //   const collectionId = parseInt(collectionIdParam);
+  //   const postId = parseInt(postIdParam);
+
+  //   this.collectionId.set(collectionId);
+  //   this.postId.set(postId);
+  //   this.param.set(editorMode);
+  //   if (updateParam === 'update') this.updateMode.set(true);
+
+  // }
 }

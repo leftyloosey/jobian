@@ -23,6 +23,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 import { extractArray } from '../../utils/functions/editorReturn';
 import { navHeadingArrayReturn } from '../../utils/types/nav-types';
+import { CreateNavMember } from '../create-nav-member/create-nav-member';
 
 @Component({
   selector: 'app-change-blogitle',
@@ -33,8 +34,9 @@ import { navHeadingArrayReturn } from '../../utils/types/nav-types';
     MatInputModule,
     ReactiveFormsModule,
     MatButton,
-    MatDialogActions,
+    // MatDialogActions,
     MatLabel,
+    CreateNavMember,
   ],
   templateUrl: './change-blogtitle.html',
   styleUrl: './change-blogtitle.scss',
