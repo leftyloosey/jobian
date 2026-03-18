@@ -10,8 +10,19 @@
 .content-wrapper {
   background-color: white;
   // max-width: 800px;
-  width: 66%;
+  width: 80%;
   min-height: 100%;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 480px) {
+  .content-wrapper {
+    background-color: white;
+    // max-width: 800px;
+    width: 92%;
+    min-height: 100%;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 }
