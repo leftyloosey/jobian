@@ -19,6 +19,7 @@ import { NameService } from '../name-service/name-service';
 import { Apollo } from 'apollo-angular';
 import { NavPostService } from '../navpost-service/navpost-service';
 import { LoadingService } from '../loading-service/loading-service';
+import { Title } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -39,12 +40,25 @@ export class NavbarCreationService {
     private createNavHead: UpsertNavHeadingGQL,
     private navService: NavPostService,
     private name: NameService,
+    private titleService: Title,
   ) {
     this.navHeadCollectionId = name.NAV_NUMBER;
   }
 
   public watchAllHeadings() {
-    return this.allHeadings.watch().valueChanges.pipe(map((result) => result));
+    return this.allHeadings.watch().valueChanges.pipe(
+      map((result) => {
+        if (result.data) {
+          const titleArray = result.data.navHeadings;
+          if (titleArray?.length) {
+            const title = titleArray[0]?.blogTitle ?? '';
+            this.titleService.setTitle(title);
+          }
+        }
+
+        return result;
+      }),
+    );
   }
 
   public watchAllMembers(collectionId: number) {

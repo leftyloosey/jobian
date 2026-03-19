@@ -16,10 +16,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { MatDialogActions } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { Title } from '@angular/platform-browser';
 
 import { extractArray } from '../../utils/functions/editorReturn';
 import { navHeadingArrayReturn } from '../../utils/types/nav-types';
@@ -57,6 +57,7 @@ export class ChangeBlogTitle {
 
   constructor(
     private admin: AdminService,
+    private titleService: Title,
     private loading: LoadingService,
     private createNav: NavbarCreationService,
   ) {
@@ -73,7 +74,16 @@ export class ChangeBlogTitle {
 
     this.$titleChange = admin.$titleChangeSubjectObs.pipe(
       switchMap((title) =>
-        createNav.changeTitle(title.blogTitle).pipe(tap((data) => data)),
+        createNav.changeTitle(title.blogTitle).pipe(
+          tap((data) => {
+            if (data.data?.upsertNavHeading.blogTitle) {
+              const newTitle = data.data?.upsertNavHeading.blogTitle;
+              this.titleService.setTitle(newTitle);
+            }
+
+            return data;
+          }),
+        ),
       ),
     );
   }
