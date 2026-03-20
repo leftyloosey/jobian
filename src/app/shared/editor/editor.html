@@ -1,4 +1,4 @@
-@if (newPost | async) {}
+<!-- @if (newPost | async) {} -->
 @if (updatePost | async) {}
 @if (watchPost | async) {}
 @if (deletePost | async) {}
@@ -8,7 +8,15 @@
 }
 
 <form [formGroup]="form" class="editor">
-  <input type="text" formControlName="title" placeholder="title" />
+  @if (isNavService) {
+    <input type="text" formControlName="title" placeholder="title" />
+  } @else {
+    <div>
+      <p>{{ this.title }}</p>
+      <p>{{ this.heading }}</p>
+    </div>
+  }
+
   <quill-editor
     [styles]="{ height: '400px' }"
     formControlName="html"
@@ -18,6 +26,4 @@
   <button (click)="saveChanges()">save changes</button>
   <button (click)="deleteThisPost($event)">delete post</button>
 </form>
-<button class="editor" (click)="backToCollectionEdit()">
-  back to collections
-</button>
+<button class="editor" (click)="backToCollectionEdit()">back</button>

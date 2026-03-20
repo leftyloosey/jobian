@@ -8,19 +8,21 @@ interface HTMLInputEvent extends Event {
   providedIn: 'root',
 })
 export class UploadComponentService {
-  protected width: number = 200;
+  protected width: number = 0;
   protected height: number = 0;
 
   public handleFileInput(
     event: Event,
     kanvasRef: ElementRef<HTMLCanvasElement> | undefined,
     headerImageString: OutputEmitterRef<string>,
+    headerImageWidth: number,
   ) {
     if (!kanvasRef) {
       throw new Error('Could not get thiscanvasref');
     }
     const canvasRef = kanvasRef;
     const string = headerImageString;
+    this.width = headerImageWidth;
 
     const emitStringUp = this.imageUp.bind(this);
     const resize = this.resize.bind(this);

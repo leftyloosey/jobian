@@ -30,3 +30,25 @@ export type ObservableFindOne = Observable<
     'empty' | 'complete' | 'streaming' | 'partial'
   >
 >;
+
+export type posst =
+  | {
+      __typename?: 'Post' | undefined;
+      id: number;
+      title?: string | null | undefined;
+      content?: any;
+      timestamp?: any;
+      heading?: string | null;
+      headerImageString: string | undefined;
+    }
+  | DeepPartial<{
+      __typename?: 'Post' | undefined;
+      id: number;
+      title?: string | null | undefined;
+      content?: any;
+      timestamp?: any;
+      heading?: string | null;
+      headerImageString: string | undefined;
+    }>
+  | null
+  | undefined;

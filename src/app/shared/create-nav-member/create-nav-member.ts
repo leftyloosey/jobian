@@ -10,10 +10,10 @@ import { extractArray } from '../../utils/functions/editorReturn';
 import { NAVMEMBER_TOTAL } from '../../utils/constants/constants';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton } from '@angular/material/button';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-create-nav-member',
-  imports: [AsyncPipe, MatIcon, MatFabButton],
+  imports: [AsyncPipe, MatIcon, MatFabButton, MatTooltipModule],
   templateUrl: './create-nav-member.html',
   styleUrl: './create-nav-member.scss',
 })
@@ -23,6 +23,8 @@ export class CreateNavMember {
 
   protected navMemberTotal = NAVMEMBER_TOTAL;
   protected newNavAllowed: boolean = false;
+
+  protected navMemberTooltip = 'Add a new link to the navigation menu';
 
   constructor(
     private navService: NavbarCreationService,

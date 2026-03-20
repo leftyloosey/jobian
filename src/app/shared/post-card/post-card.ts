@@ -12,15 +12,15 @@ import { cleanAndDash } from '../../utils/functions/dashing-functions';
 })
 export class PostCard implements OnInit {
   public postDown = input.required<Post>();
-  protected post!: Post;
+  // protected post!: Post;
   // protected post: Post
   protected title: string = '';
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.post = this.postDown();
-    if (this.post?.title) this.title = this.post?.title;
+    this.title = this.postDown().title;
+    console.log(this.postDown());
   }
   protected goToPost(id: number) {
     const title = cleanAndDash(this.title);

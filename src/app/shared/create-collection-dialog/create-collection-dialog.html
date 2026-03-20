@@ -39,6 +39,7 @@
     <!-- <app-upload-component /> -->
     <app-upload-component
       [receivedImageString]="this.headerString"
+      [width]="this.headerImageWidth"
       (headerImageString)="receiveHeaderImageString($event)"
     />
 
@@ -49,7 +50,7 @@
         matButton="filled"
         color="secondary"
       >
-        Create New
+        Save
       </button>
     </mat-dialog-actions>
   </form>

@@ -12,13 +12,12 @@
   <app-change-blogitle />
 
   @for (collection of collection$ | async; track collection?.title) {
-    <div class="row">
-      <app-collection-admin-row
-        (idUpForDelete)="deleteCollection($event)"
-        (collectionUpForOpen)="updateCollection($event)"
-        [downCollection]="collection"
-      />
-    </div>
+    <app-collection-admin-row
+      (idUpForDelete)="deleteCollection($event)"
+      (collectionUpForEdit)="shturb($event)"
+      (collectionUpForOpen)="updateCollection($event)"
+      [downCollection]="collection"
+    />
   }
   <div class="admin__bottom-row">
     <button matButton="filled" (click)="openDialog(null)">

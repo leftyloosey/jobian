@@ -1,0 +1,18 @@
+.collection-edit {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  min-height: 100vh;
+
+  &__bottom-row {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.collection-edit__bottom-row {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+}

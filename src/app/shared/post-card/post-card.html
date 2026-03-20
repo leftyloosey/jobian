@@ -1,13 +1,19 @@
 <mat-card appearance="outlined">
-  <div class="collection-card-header">
-    <!-- <mat-card-header>
-      <img [src]="collection?.headerImageString" />
-    </mat-card-header> -->
+  <div class="post-card">
+    <!-- <mat-card-header> -->
+    <img class="post-card__image" [src]="postDown().headerImageString" />
+    <!-- </mat-card-header> -->
     <mat-card-header>
       <mat-card-title>
-        <a routerLink class="lank" (click)="goToPost(post.id)">{{
-          post.title
-        }}</a>
+        <a
+          routerLink
+          class="post-card__title"
+          (click)="goToPost(postDown().id)"
+          >{{ postDown().title }}</a
+        >
+        <span class="post-card__subtitle">
+          {{ postDown().heading }}
+        </span>
       </mat-card-title>
     </mat-card-header>
   </div>

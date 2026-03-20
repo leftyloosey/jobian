@@ -21,6 +21,7 @@ import {
   UpsertCollectionInputMutation,
   CollectionByUserGQL,
   CollectionsOfOwnerDocument,
+  FindOneDocument,
 } from '../../../graphql/generated';
 
 @Injectable({
@@ -40,9 +41,12 @@ export class CollectionService {
 
   public watchCollections() {
     return this.getCollections
-      .watch({ variables: { authorId: this.name.getUser() } })
+      .watch({
+        variables: { authorId: this.name.getUser() },
+      })
       .valueChanges.pipe(
         map((result) => {
+          console.log(result);
           return result;
         }),
       );
@@ -92,10 +96,12 @@ export class CollectionService {
     input: UpsertCollection,
   ): Observable<Apollo.MutateResult<UpsertCollectionInputMutation>> {
     input.authorId = this.name.getUser();
-    // };
     return this.upsertColl.mutate({
       variables: { input },
       refetchQueries: [
+        {
+          query: CollectionsOfOwnerDocument,
+        },
         {
           query: CollectionByUserDocument,
           variables: { authorId: this.name.getUser() },

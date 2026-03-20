@@ -12,6 +12,7 @@ import { UploadComponentService } from '../../services/upload-component-service/
 export class UploadComponent {
   protected headerImageHidden: boolean = true;
   public receivedImageString = input.required<string>();
+  public width = input.required<number>();
 
   protected headerImageString = output<string>();
 

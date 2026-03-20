@@ -35,6 +35,8 @@ export const COLLECTION_WITH_POSTS = gql`
         title
         content
         timestamp
+        heading
+        headerImageString
       }
     }
   }

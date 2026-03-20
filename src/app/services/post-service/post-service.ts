@@ -8,6 +8,7 @@ import {
   FindOneGQL,
   FindOneQuery,
   FindOneWithPostsDocument,
+  PostsInCollectionDocument,
   PostsInCollectionGQL,
   PostsInCollectionQuery,
   RemovePostGQL,
@@ -108,15 +109,15 @@ export class PostService extends PostServiceBaseClass<
   public updateOne(
     input2: UpdatePost,
   ): Observable<Apollo.MutateResult<unknown>> {
-    const { title, id, content } = input2;
-    const input = { title, id, content };
+    const { title, id, content, heading, headerImageString } = input2;
+    const input = { title, id, content, heading, headerImageString };
     return this.updatePost.mutate({
       variables: { input },
       refetchQueries: [
-        // {
-        //   query: FindOneWithPostsDocument,
-        //   variables: { id: input2.collectionId },
-        // },
+        {
+          query: FindOneWithPostsDocument,
+          variables: { id: input2.collectionId },
+        },
         {
           query: FindOneDocument,
           variables: { id },

@@ -12,6 +12,7 @@ export interface editReturnable {
   content: [];
   title: string;
   collectionId: number;
+  heading: string;
 }
 export interface editRetornable {
   __typename: string;

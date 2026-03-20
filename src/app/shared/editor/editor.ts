@@ -13,6 +13,7 @@ import { returnEditQuery } from '../../utils/functions/editorReturn';
 
 import Quill from 'quill';
 import { PostService } from '../../services/post-service/post-service';
+import { NavPostService } from '../../services/navpost-service/navpost-service';
 
 @Component({
   selector: 'app-editor',
@@ -41,6 +42,9 @@ export class Editor {
   private updateMode: boolean = false;
   protected postId: number = 0;
   protected collectionId: number = 0;
+  protected title: string = '';
+  protected heading: string = '';
+  protected isNavService: boolean = false;
 
   protected loading = signal<boolean>(false);
 
@@ -48,7 +52,7 @@ export class Editor {
 
   private destroyRef = inject(DestroyRef);
 
-  protected newPost!: Observable<ApolloClient.MutateResult<unknown>>;
+  // protected newPost!: Observable<ApolloClient.MutateResult<unknown>>;
   protected updatePost!: Observable<ApolloClient.MutateResult<unknown>>;
   protected watchPost!: Observable<ApolloClient.MutateResult<unknown>>;
   protected deletePost!: Observable<ApolloClient.MutateResult<unknown>>;
@@ -60,6 +64,7 @@ export class Editor {
   ) {
     // this collectionId is the automatic setting for simply displaying a post/nav without editing
     this.collectionId = this.post.collectionId;
+    if (this.post instanceof NavPostService) this.isNavService = true;
 
     this.postId = this.post.postId;
     this.updateMode = this.post.updateMode;
@@ -71,9 +76,10 @@ export class Editor {
           tap((post) => {
             const data = returnEditQuery(post);
 
-            // if the post/nav is to bed edited, it will change here
+            // if the post/nav is to be edited, it will change here
             this.collectionId = data?.collectionId ?? 0;
-
+            this.title = data?.title ?? '';
+            this.heading = data?.heading ?? '';
             this.loading.set(post.loading);
             this.quill.setContents(data?.content ?? []);
             this.form.controls.title.setValue(data?.title ?? '');
@@ -82,12 +88,12 @@ export class Editor {
       ),
     );
 
-    this.newPost = editor.$newPostObs.pipe(
-      takeUntilDestroyed(),
-      switchMap((collection) =>
-        this.post.newPost(collection).pipe(tap((result) => result)),
-      ),
-    );
+    // this.newPost = editor.$newPostObs.pipe(
+    //   takeUntilDestroyed(),
+    //   switchMap((collection) =>
+    //     this.post.newPost(collection).pipe(tap((result) => result)),
+    //   ),
+    // );
 
     this.updatePost = editor.$updatePostObs.pipe(
       takeUntilDestroyed(),
@@ -130,11 +136,11 @@ export class Editor {
         id: this.postId,
       });
     } else {
-      this.editor.newPost.next({
-        title,
-        content: delta.ops,
-        collectionId: this.collectionId,
-      });
+      // this.editor.newPost.next({
+      //   title,
+      //   content: delta.ops,
+      //   collectionId: this.collectionId,
+      // });
     }
   }
 

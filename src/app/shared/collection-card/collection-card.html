@@ -1,6 +1,6 @@
 <mat-card appearance="outlined">
   <div
-    class="collection-card-header"
+    class="collection-card"
     style="cursor: pointer"
     (click)="openCollection(collection?.urlTitle)"
   >
@@ -9,7 +9,9 @@
     </mat-card-header>
     <mat-card-header>
       <mat-card-title>{{ collection?.title }}</mat-card-title>
-      <mat-card-subtitle>{{ collection?.heading }}</mat-card-subtitle>
+      <mat-card-subtitle class="collection-card__subtitle">{{
+        collection?.heading
+      }}</mat-card-subtitle>
     </mat-card-header>
   </div>
 

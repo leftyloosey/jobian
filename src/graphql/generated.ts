@@ -68,6 +68,8 @@ export type CreateNavMemberInput = {
 export type CreatePostInput = {
   collectionId?: InputMaybe<Scalars['Int']['input']>;
   content?: InputMaybe<Scalars['JSON']['input']>;
+  headerImageString?: InputMaybe<Scalars['String']['input']>;
+  heading?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -224,11 +226,13 @@ export type Post = {
   __typename?: 'Post';
   collection?: Maybe<Collection>;
   collectionId?: Maybe<Scalars['Int']['output']>;
-  content?: Maybe<Scalars['JSON']['output']>;
+  content: Scalars['JSON']['output'];
+  headerImageString: Scalars['String']['output'];
+  heading: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  published?: Maybe<Scalars['Boolean']['output']>;
-  timestamp?: Maybe<Scalars['Date']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  published: Scalars['Boolean']['output'];
+  timestamp: Scalars['Date']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -334,6 +338,8 @@ export type UpdateNavMemberInput = {
 
 export type UpdatePostInput = {
   content?: InputMaybe<Scalars['JSON']['input']>;
+  headerImageString?: InputMaybe<Scalars['String']['input']>;
+  heading?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
   modified?: InputMaybe<Scalars['Date']['input']>;
   published?: InputMaybe<Scalars['Boolean']['input']>;
@@ -360,14 +366,14 @@ export type CollectionByUserQueryVariables = Exact<{
 }>;
 
 
-export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, urlTitle: string, heading: string, headerImageString: string, id: number, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null> | null } | null> };
+export type CollectionByUserQuery = { __typename?: 'Query', collectionByUser: Array<{ __typename?: 'Collection', title: string, urlTitle: string, heading: string, headerImageString: string, id: number, posts?: Array<{ __typename?: 'Post', id: number, title: string, content: any } | null> | null } | null> };
 
 export type FindOneWithPostsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading: string, posts?: Array<{ __typename?: 'Post', id: number, title?: string | null, content?: any | null, timestamp?: any | null } | null> | null } | null };
+export type FindOneWithPostsQuery = { __typename?: 'Query', collectionWithPosts?: { __typename?: 'Collection', id: number, title: string, heading: string, posts?: Array<{ __typename?: 'Post', id: number, title: string, content: any, timestamp: any, heading: string, headerImageString: string } | null> | null } | null };
 
 export type CreateCollectionInputMutationVariables = Exact<{
   input: CreateCollectionInput;
@@ -496,42 +502,42 @@ export type CreatePostInputMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostInputMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', title?: string | null, content?: any | null } };
+export type CreatePostInputMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', title: string, content: any } };
 
 export type FindOneQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type FindOneQuery = { __typename?: 'Query', post?: { __typename?: 'Post', title?: string | null, content?: any | null, collectionId?: number | null } | null };
+export type FindOneQuery = { __typename?: 'Query', post?: { __typename?: 'Post', title: string, content: any, collectionId?: number | null, heading: string } | null };
 
 export type PostsInCollectionQueryVariables = Exact<{
   collectionId: Scalars['Int']['input'];
 }>;
 
 
-export type PostsInCollectionQuery = { __typename?: 'Query', postsInCollection: Array<{ __typename?: 'Post', title?: string | null, content?: any | null, id: number } | null> };
+export type PostsInCollectionQuery = { __typename?: 'Query', postsInCollection: Array<{ __typename?: 'Post', title: string, content: any, id: number } | null> };
 
 export type PostsByCollectionTitleQueryVariables = Exact<{
   collectionTitle: Scalars['String']['input'];
 }>;
 
 
-export type PostsByCollectionTitleQuery = { __typename?: 'Query', postsByCollectionTitle: Array<{ __typename?: 'Post', title?: string | null, content?: any | null, id: number, collectionId?: number | null, timestamp?: any | null } | null> };
+export type PostsByCollectionTitleQuery = { __typename?: 'Query', postsByCollectionTitle: Array<{ __typename?: 'Post', title: string, content: any, id: number, collectionId?: number | null, timestamp: any, heading: string, headerImageString: string } | null> };
 
 export type UpdatePostInputMutationVariables = Exact<{
   input: UpdatePostInput;
 }>;
 
 
-export type UpdatePostInputMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', title?: string | null, content?: any | null } };
+export type UpdatePostInputMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', title: string, content: any } };
 
 export type RemovePostMutationVariables = Exact<{
   input: Scalars['Int']['input'];
 }>;
 
 
-export type RemovePostMutation = { __typename?: 'Mutation', removePost?: { __typename?: 'Post', id: number, title?: string | null, content?: any | null } | null };
+export type RemovePostMutation = { __typename?: 'Mutation', removePost?: { __typename?: 'Post', id: number, title: string, content: any } | null };
 
 export type CollectionsOfOwnerQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -581,6 +587,8 @@ export const FindOneWithPostsDocument = gql`
       title
       content
       timestamp
+      heading
+      headerImageString
     }
   }
 }
@@ -982,6 +990,7 @@ export const FindOneDocument = gql`
     title
     content
     collectionId
+    heading
   }
 }
     `;
@@ -1024,6 +1033,8 @@ export const PostsByCollectionTitleDocument = gql`
     id
     collectionId
     timestamp
+    heading
+    headerImageString
   }
 }
     `;

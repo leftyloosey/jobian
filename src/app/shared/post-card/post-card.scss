@@ -1,4 +1,19 @@
-.lank {
+.post-card {
+  display: flex;
+  width: 100%;
+  padding: 0.5rem;
+}
+.post-card__image {
+  object-fit: contain;
+}
+.post-card__title {
   color: black;
   text-decoration: none;
+}
+.post-card__subtitle {
+  font-size: smaller;
+  font-weight: 300;
+  color: black;
+  text-decoration: none;
+  padding-left: 1rem;
 }

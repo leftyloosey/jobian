@@ -11,14 +11,13 @@ import {
   UpsertNavHeadingGQL,
   UpsertNavHeadingMutation,
 } from '../../../graphql/generated';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { NavbarContainer } from '../../modules/navbar-container/navbar-container';
 import { NavUserOpen } from '../nav-user-open/nav-user-open';
 import { NavAdminOpen } from '../nav-admin-open/nav-admin-open';
 import { NameService } from '../name-service/name-service';
 import { Apollo } from 'apollo-angular';
 import { NavPostService } from '../navpost-service/navpost-service';
-import { LoadingService } from '../loading-service/loading-service';
 import { Title } from '@angular/platform-browser';
 
 @Injectable({

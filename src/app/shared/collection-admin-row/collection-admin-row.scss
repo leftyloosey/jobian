@@ -1,4 +1,21 @@
-.collection-card__header {
+.collection-card {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem;
+
+  &__image {
+    object-fit: contain;
+  }
+
+  &__header {
+    display: flex;
+    justify-self: flex-start;
+
+    width: 100%;
+  }
+
+  &__subtitle {
+    font-weight: 300;
+  }
 }

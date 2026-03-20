@@ -1,4 +1,7 @@
 @if (submit$ | async) {}
+@if (newPost | async) {}
+@if (updatePost | async) {}
+@if (deletePost | async) {}
 @if (data$ | async) {}
 
 <h2>{{ title() }}</h2>
@@ -6,12 +9,18 @@
 @if (loading()) {
   <app-graphql-spinner [loading]="loading()" />
 }
+<div class="collection-edit">
+  @for (post of posts(); track post?.id) {
+    <app-collection-admin-row
+      (idUpForDelete)="deleteCollection($event)"
+      (collectionUpForOpen)="updateCollection($event)"
+      (collectionUpForEdit)="shturb($event)"
+      [downCollection]="post"
+    />
+  }
 
-@for (post of posts; track post?.id) {
-  <div>
-    {{ post?.title }}
-    <button (click)="editPost(post?.id ?? 0)">edit</button>
+  <div class="collection-edit__bottom-row">
+    <button matButton="filled" (click)="createPost()">Create Post</button>
+    <button matButton="outlined" (click)="backToAdmin()">Back</button>
   </div>
-}
-<div><button (click)="newPost()">new</button></div>
-<button (click)="backToAdmin()">back to admin</button>
+</div>

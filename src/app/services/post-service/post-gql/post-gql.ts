@@ -15,6 +15,7 @@ export const FIND_ONE_POST = gql`
       title
       content
       collectionId
+      heading
     }
   }
 `;
@@ -37,6 +38,8 @@ export const POSTS_BY_COLLECTION_TITLE = gql`
       id
       collectionId
       timestamp
+      heading
+      headerImageString
     }
   }
 `;

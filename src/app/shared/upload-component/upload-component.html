@@ -12,7 +12,12 @@
   id="file"
   type="file"
   (change)="
-    this.upload.handleFileInput($event, this.canvasRef, this.headerImageString)
+    this.upload.handleFileInput(
+      $event,
+      this.canvasRef,
+      this.headerImageString,
+      this.width()
+    )
   "
 />
 <div class="file-upload">

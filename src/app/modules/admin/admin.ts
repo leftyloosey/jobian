@@ -1,7 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { CollectionAdminRow } from '../../shared/collection-admin-row/collection-admin-row';
+import {
+  CollectionAdminRow,
+  onion,
+} from '../../shared/collection-admin-row/collection-admin-row';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
@@ -15,15 +18,14 @@ import { AdminService } from '../../services/admin-service/admin-service';
 import {
   CollectionsWithPartial,
   CollectionWithPartial,
-  MaybeCollection,
 } from '../../utils/types/collection-types';
 import { NameService } from '../../services/name-service/name-service';
 import { GraphqlSpinner } from '../../shared/graphql-spinner/graphql-spinner';
 import { CreateCollectionDialog } from '../../shared/create-collection-dialog/create-collection-dialog';
 import { cleanAndDash } from '../../utils/functions/dashing-functions';
 import { ChangeBlogTitle } from '../../shared/change-blogtitle/change-blogtitle';
-import { CreateNavMember } from '../../shared/create-nav-member/create-nav-member';
 import { sortByDate } from '../../utils/functions/sort-posts';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-admin',
   imports: [
@@ -53,6 +55,7 @@ export class Admin {
     private collection: CollectionService,
     private admin: AdminService,
     private name: NameService,
+    private router: Router,
   ) {
     admin.upsertSubject
       .pipe(
@@ -113,22 +116,33 @@ export class Admin {
     });
   }
 
-  protected deleteCollection(collectionId: number): void {
-    this.admin.deleteSubject.next({
-      collectionId,
-    });
+  protected deleteCollection(element: onion): void {
+    // protected deleteCollection(collectionId: number): void {
+    const collectionId = element?.id;
+    if (collectionId)
+      this.admin.deleteSubject.next({
+        collectionId,
+      });
   }
 
-  protected updateCollection(collection: CollectionWithPartial): void {
+  protected updateCollection<T extends onion>(collection: T): void {
     if (collection) this.openDialog(collection);
   }
+  protected shturb<T extends onion>(collection: T): void {
+    this.router.navigate(['/admin/collection-edit', collection?.id]);
+  }
+  // protected updateCollection(collection: CollectionWithPartial): void {
+  //   if (collection) this.openDialog(collection);
+  // }
 
-  protected openDialog(collection: CollectionWithPartial): void {
+  protected openDialog<T extends onion>(collection: T): void {
+    // protected openDialog(collection: CollectionWithPartial): void {
     const coll = {
       id: collection?.id ?? 0,
       title: collection?.title ?? '',
       heading: collection?.heading ?? '',
       headerImageString: collection?.headerImageString ?? '',
+      postType: false,
     };
     const dialogRef = this.dialog.open(CreateCollectionDialog, {
       data: coll,
@@ -139,7 +153,7 @@ export class Admin {
 
         // format title to be used in url navigation
         const urlTitle = cleanAndDash(title);
-        console.log(urlTitle);
+
         this.upsertCollection(id, title, urlTitle, heading, headerImageString);
       }
     });
